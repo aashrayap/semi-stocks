@@ -1,6 +1,6 @@
 source: semianalysis
 entity: "SemiAnalysis (Dylan Patel)"
-updated: "2026-04-03"
+updated: "2026-04-07"
 
 # Credibility notes:
 # - Smartphone volume projections (500-600M) are more aggressive than IDC consensus (~1.1B)
@@ -9,6 +9,19 @@ updated: "2026-04-03"
 # - Use for DIRECTION, discount MAGNITUDE by 6-12 months
 
 signals:
+  - date: "2026-04-03"
+    title: "Memory Will Consume 30% of Hyperscaler CapEx — Supply Terms Analysis"
+    bottleneck: memory
+    data_points:
+      - "Nvidia receives 'VVP (Very Very Preferred)' DRAM pricing — well below standard market rates"
+      - "AMD has no preferential memory pricing — structurally exposed to HBM/DRAM cost inflation"
+      - "B200 ASP expected to rise ~20% by H2 2026 (supply tightness + demand momentum)"
+      - "LPDDR5 contract prices tripled since Q1 2025; spot prices ~$10+/GB"
+      - "HBM undersupplied through 2027 — all three vendors (SK Hynix, Samsung, Micron) sold out"
+      - "Memory = 30% of hyperscaler CapEx in 2026, up from 8% in 2023-2024"
+    tickers: [MU, NVDA]
+    notes: "VVP pricing = Nvidia competitive moat wider than modeled. AMD GPU margin headwind is new short thesis."
+
   - date: "2026-04-02"
     title: "The Great GPU Shortage — Rental Capacity"
     bottleneck: n3_logic

@@ -1,4 +1,5 @@
 updated: "2026-04-07"
+# Last monitor run: 2026-04-07 (semianalysis check)
 
 cascade:
   - name: CoWoS packaging
@@ -24,10 +25,12 @@ cascade:
       - "DDR4 spot $2.10/Gbit — now exceeds HBM3e at $1.70/Gbit (unprecedented)"
       - "30% of Big Tech $650B CapEx goes to memory"
       - "HBM revenue 41% of total DRAM by 2026"
-      - "All vendors (SK Hynix, Samsung, Micron) sold out through 2026"
+      - "All vendors (SK Hynix, Samsung, Micron) sold out through 2027 (extended from 2026 — Apr 3 SemiAnalysis)"
       - "Smartphone volumes declining — DRAM demand destruction freeing supply for AI"
       - "NVIDIA $21.4B inventory includes significant HBM stockpile (Q4 FY2026)"
-    notes: "Baker is long MU + put hedge. Leopold exited MU puts in Q4."
+    notes: >
+      Baker is long MU + put hedge. Leopold exited MU puts in Q4.
+      LPDDR5 spot $10+/GB (3x since Q1 2025). HBM undersupply horizon now extends through 2027.
 
   - name: N3 logic wafers
     status: active
@@ -44,6 +47,9 @@ cascade:
     notes: >
       Originally sequenced after memory but SemiAnalysis data shows both binding simultaneously.
       Baker massive NVDA long ($1B+). Leopold holds INTC calls ($749M) but exited NVDA.
+      Nvidia "VVP" DRAM supply terms (below market) = moat wider than modeled (Apr 3 SemiAnalysis).
+      AMD has no preferential pricing — GPU margin headwind if HBM costs continue rising.
+      B200 ASP expected +20% H2 2026, consistent with sustained supply constraint.
 
   - name: Pluggable optics (scale-out)
     status: active
