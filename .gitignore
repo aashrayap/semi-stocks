@@ -1,0 +1,11 @@
+.DS_Store
+__pycache__/
+*.pyc
+.claude/
+
+# Generated artifacts
+reports/
+
+# Raw transcripts — copyright risk, large, regeneratable from public sources
+# The wiki/sources/ summaries are the useful layer
+wiki/raw/

@@ -1,0 +1,112 @@
+updated: "2026-04-07"
+
+cascade:
+  - name: CoWoS packaging
+    status: played_out
+    period: "2023"
+    tickers: [ASX, AMAT]
+    notes: "TSMC ramped CoWoS capacity to ~1M wafers/yr by 2026. Nvidia has 60%."
+
+  - name: Power / DC buildout
+    status: played_out
+    period: "2024"
+    tickers: [VST, CEG, TLN, VRT]
+    notes: >
+      56 GW announced. PJM backlog still 286 GW.
+      Leopold still positioned here (BE, miners) — he may see this as unresolved.
+
+  - name: Memory supercycle
+    status: active
+    period: "2025-2026"
+    tickers: [MU, SNDK]
+    signals:
+      - "DRAM contract prices +90-95% QoQ (Q1 2026, TrendForce)"
+      - "DDR4 spot $2.10/Gbit — now exceeds HBM3e at $1.70/Gbit (unprecedented)"
+      - "30% of Big Tech $650B CapEx goes to memory"
+      - "HBM revenue 41% of total DRAM by 2026"
+      - "All vendors (SK Hynix, Samsung, Micron) sold out through 2026"
+      - "Smartphone volumes declining — DRAM demand destruction freeing supply for AI"
+      - "NVIDIA $21.4B inventory includes significant HBM stockpile (Q4 FY2026)"
+    notes: "Baker is long MU + put hedge. Leopold exited MU puts in Q4."
+
+  - name: N3 logic wafers
+    status: active
+    period: "2025-2027"
+    tickers: [TSM, NVDA, AVGO, INTC]
+    signals:
+      - "AI = 60% of TSMC N3 output (2026), projected 86% by 2027"
+      - "N3 utilization 100%+ in H2 2026"
+      - "All major AI accelerators moving to N3 simultaneously: Rubin, TPU v7/v8, Trainium3, MI350X"
+      - "CPUs competing with GPUs for same N3 capacity (Venice, Diamond Rapids, Vera)"
+      - "Reallocating 5% of smartphone N3 wafers = ~100K Rubin GPUs"
+      - "NVIDIA supply commitments doubled $50.3B → $95.2B QoQ, capacity secured through CY2027 (Q4 FY2026)"
+      - "Vera Rubin samples shipped, production H2 2026 — six new chips this cycle all on N3"
+    notes: >
+      Originally sequenced after memory but SemiAnalysis data shows both binding simultaneously.
+      Baker massive NVDA long ($1B+). Leopold holds INTC calls ($749M) but exited NVDA.
+
+  - name: Pluggable optics (scale-out)
+    status: active
+    period: "2025-2027"
+    tickers: [COHR, LITE, CIEN]
+    signals:
+      - "Every NVL72/NVL144/NVL288 rack uses pluggable optics for scale-out networking"
+      - "LPX rack: 8x OSFP cages per tray for inter-rack C2C"
+      - "Spectrum-X Ethernet scale-out connects LPU↔GPU in disaggregated decode"
+      - "Blackwell NVL576 prototype 'Polyphe' uses pluggable optics between racks"
+      - "Vera ETL256: 32 front-facing OSFP cages per rack for pod connectivity"
+      - "NVIDIA networking revenue $11B quarterly (+3.5x YoY), Spectrum-X 'a home run' (Q4 FY2026)"
+    notes: >
+      Revenue is flowing NOW — every rack Nvidia ships has pluggable transceivers.
+      This is the current trade. COHR and LITE make 800G/1.6T pluggable transceivers.
+      CIEN supplies optical networking switches for scale-out fabrics.
+      Leopold: LITE $479M, COHR $89M. Baker: COHR $228M, CIEN $334M, LITE $141M.
+
+  - name: Co-packaged optics / CPO (scale-up)
+    status: next
+    period: "2028-2030"
+    tickers: [COHR, LITE, CIEN, ALAB, SMTC]
+    signals:
+      - "CPO market $20B by 2036, 37% CAGR"
+      - "Rubin Ultra NVL576: CPO between racks — explicitly low volume / test only"
+      - "Feynman NVL1152: CPO between racks, copper within rack (base case)"
+      - "Jensen: NVL1152 will be 'all CPO' — but contradicted by Nvidia technical blog"
+      - "Nvidia Spectrum-X and Quantum-X Photonics built on TSMC SoIC 3D"
+      - "448G SerDes challenges (shoreline, reach, power) favor CPO over copper at next speed step"
+    notes: >
+      Volume CPO is a Feynman story (2028+), NOT Rubin Ultra.
+      NVL576 is test/low-volume. Inside every rack through NVL1152 remains copper.
+      ALAB and SMTC benefit from copper persistence inside racks — retimers and signal
+      integrity ICs needed at 200G/lane. Baker: ALAB $268M, SMTC $51M.
+      CPO winners will be whoever integrates optical engines on-package — COHR and LITE
+      are best positioned but volume revenue is years away.
+
+  - name: EUV tools
+    status: next
+    period: "2028-2030"
+    tickers: [ASML]
+    signals:
+      - "ASML can produce ~100 EUV tools/yr by 2030 (Zeiss optics is the constraint)"
+      - "3.5 EUV tools per gigawatt of fab capacity"
+    notes: "Neither Leopold nor Baker has significant ASML exposure yet. Watch for early entry."
+
+# Ticker-to-bottleneck mapping (for synthesis lookups)
+ticker_map:
+  COHR:  { bottleneck: pluggable_optics, status: active, also: cpo_next, next_earnings: "2026-05-07" }
+  LITE:  { bottleneck: pluggable_optics, status: active, also: cpo_next, next_earnings: "2026-05-06" }
+  CIEN:  { bottleneck: pluggable_optics, status: active, next_earnings: "2026-06-04" }
+  ALAB:  { bottleneck: copper_signal_integrity, status: active, also: cpo_next, next_earnings: "2026-05-06" }
+  SMTC:  { bottleneck: copper_signal_integrity, status: active, also: cpo_next, next_earnings: "2026-06-04" }
+  MU:    { bottleneck: memory, status: active, next_earnings: "2026-06-25" }
+  SNDK:  { bottleneck: memory, status: active, next_earnings: "2026-05-01" }
+  TSM:   { bottleneck: n3_logic, status: active, next_earnings: "2026-04-17" }
+  NVDA:  { bottleneck: n3_logic, status: active, next_earnings: "2026-05-28" }
+  AVGO:  { bottleneck: n3_logic, status: active, next_earnings: "2026-06-12" }
+  INTC:  { bottleneck: n3_logic, status: active, next_earnings: "2026-04-24" }
+  ASML:  { bottleneck: euv, status: next, next_earnings: "2026-04-16" }
+  CRWV:  { bottleneck: gpu_cloud, status: active, next_earnings: "2026-05-12" }
+  BE:    { bottleneck: power, status: played_out, next_earnings: "2026-05-08" }
+  CORZ:  { bottleneck: power, status: played_out, next_earnings: "2026-05-08" }
+  IREN:  { bottleneck: power, status: played_out, next_earnings: "2026-05-15" }
+  EQT:   { bottleneck: power, status: played_out, next_earnings: "2026-04-23" }
+  TSEM:  { bottleneck: foundry, status: active, next_earnings: "2026-05-14" }

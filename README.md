@@ -89,8 +89,26 @@ Overlap zone (both agree):
   → COHR, LITE (optical interconnect)
 ```
 
+## Research Pipeline
+
+Research flows through a layered funnel — wide at ingest, narrow at thesis.
+
+```
+wiki/raw/              → wiki/sources/           → data/companies/        → data/thesis.yaml
+(transcripts, filings)   (synthesized pages)       (structured YAML)        (cascade updates)
+~20 companies            ~12-15 companies          ~5-8 companies           only when status shifts
+```
+
+- **wiki/raw/** — Immutable source material. Full earnings transcripts, SEC filings, articles. Cheap to store.
+- **wiki/sources/** — Synthesized knowledge pages. Key metrics, guidance claims, notable quotes, wikilinks to concepts. Self-contained for most queries.
+- **data/companies/** — Structured analysis for high-conviction names. Quarterly YAML with financials, forward claims (verifiable with `status: pending|confirmed|missed`), thesis signals, fund positioning cross-reference.
+- **data/thesis.yaml** — Cascade status. Updated only when earnings data actually shifts a bottleneck.
+
+See `wiki/schema.md` for wiki conventions and `CLAUDE.md` for the full earnings pipeline process.
+
 ## Data Refresh Cadence
 
 - **13F filings:** Quarterly (45 days after quarter end). Next: ~May 15, 2026
 - **SemiAnalysis:** Continuous newsletter + paid data products
-- **Earnings calls:** Track ASML, TSM, SK Hynix, MU for supply chain signals
+- **Earnings calls:** Track ASML, TSM, SK Hynix, MU for supply chain signals; see CLAUDE.md § Earnings Pipeline
+ 
