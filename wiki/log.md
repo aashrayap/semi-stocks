@@ -4,6 +4,22 @@ Append-only record of wiki activity. Each entry starts with `## [date] action | 
 
 ---
 
+## [2026-04-07] query → output | Baker's cyclicality thesis — "every shortage followed by a glut"
+
+Filed to `outputs/baker-cyclicality-thesis.md`. Research dispatched across 7 parallel subagents covering: Memory (MU), Foundry (TSM), Equipment (ASML/LRCX/AMAT), Broadcom (AVGO), Auto/Analog (TXN/ON/NXPI/ADI), GPU (NVDA/AMD), and Baker's public commentary. Synthesized evidence matrix, P/E compression data, lead time signals, and counter-arguments. Key finding: Baker's framework confirmed across all subsectors except AVGO (partial exception due to software mix and supply discipline). TXN is the single strongest proof point — P/E 16x at peak earnings, 38x at trough, stock higher during glut.
+
+---
+
+## [2026-04-07] query → output | NVDA pre-earnings swing trade thesis
+
+Filed `outputs/nvda-swing-trade-thesis.md`. Query synthesized wiki sources (NVDA Q4 FY2026 earnings, Baker/Leopold positioning, SemiAnalysis signals, bottleneck cascade, token economics) with live market research (price history, technicals, options data, analyst consensus).
+
+Key findings: $170 support confirmed (3 tests), $185-190 resistance confirmed (death cross). Forward P/E 21x on 73% growth = fundamental floor. Iron condor ($170/$190 short strikes, May 16 expiry) + directional swing trade ($171 entry, $183-185 target, $165 stop). Hard exit by May 20 before earnings.
+
+Also added `next_earnings` field to all tickers in `thesis.yaml` and an Earnings column to the report source agreement map (color-coded: red <=7d, orange <=21d).
+
+---
+
 ## [2026-04-07] update | Concept pages updated with earnings confirmation
 
 Updated 3 concept pages to reflect CRWV Q4 2025 and NVDA Q4 FY2026 earnings signals:

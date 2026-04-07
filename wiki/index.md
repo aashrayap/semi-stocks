@@ -7,6 +7,7 @@ Thesis-linked: `data/thesis.yaml` | Data sources: `data/sources/`
 Last updated: 2026-04-07
 
 
+
 ## Concepts
 
 | Page | Summary |
@@ -30,4 +31,7 @@ Last updated: 2026-04-07
 
 ## Outputs
 
-_No outputs filed yet._
+| Page | Summary |
+|------|---------|
+| [[outputs/nvda-swing-trade-thesis]] | NVDA $170-$190 pre-earnings swing trade + iron condor thesis, hard entry/exit rules |
+| [[outputs/baker-cyclicality-thesis]] | Baker's "every shortage followed by a glut" thesis — evidence across 6 subsectors (MU, TSM, ASML, LRCX, TXN, ON, NVDA, AVGO), P/E compression data, lead time signals |

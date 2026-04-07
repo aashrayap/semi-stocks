@@ -5,6 +5,9 @@ __pycache__/
 
 # Generated artifacts
 reports/
+agents/reports/
+agents/logs/
+agents/state/
 
 # Raw transcripts — copyright risk, large, regeneratable from public sources
 # The wiki/sources/ summaries are the useful layer
