@@ -1,0 +1,77 @@
+ticker: TSM
+quarter: Q1 2026
+predicted_at: '2026-04-07'
+earnings_date: '2026-04-17'
+bottleneck: n3_logic
+bottleneck_status: active
+predictions:
+- claim: N3 Logic utilization remains at or near capacity in Q1_2026
+  category: capacity
+  basis:
+  - source: data/thesis.yaml
+    detail: AI = 60% of TSMC N3 output (2026), projected 86% by 2027
+  - source: data/thesis.yaml
+    detail: N3 utilization 100%+ in H2 2026
+  - source: data/thesis.yaml
+    detail: 'All major AI accelerators moving to N3 simultaneously: Rubin, TPU v7/v8, Trainium3, MI350X'
+  - source: data/sources/semianalysis/signals.yaml
+    detail: 'H100 1yr rental: $1.70/hr (Oct 2025) → $2.35/hr (Mar 2026), +40%'
+  confidence: high
+  verify_at: Q1_2026 earnings
+  status: pending
+- claim: ASPs/margins remain strong or expand due to n3 logic constraints
+  category: pricing
+  basis:
+  - source: data/sources/semianalysis/signals.yaml
+    detail: 'H100 1yr rental: $1.70/hr (Oct 2025) → $2.35/hr (Mar 2026), +40%'
+  - source: data/sources/semianalysis/signals.yaml
+    detail: 'AWS p6-b200 spot: $14/hr/GPU'
+  - source: data/sources/semianalysis/signals.yaml
+    detail: AI = 60% of TSMC N3 output (2026), projected 86% by 2027
+  - source: data/sources/semianalysis/signals.yaml
+    detail: Reallocating 5% smartphone N3 wafers = ~100K Rubin GPUs or ~300K TPU v7s
+  confidence: high
+  verify_at: Q1_2026 earnings
+  status: pending
+- claim: Customer demand for n3 logic products remains elevated or accelerating
+  category: demand
+  basis:
+  - source: data/sources/semianalysis/signals.yaml
+    detail: 'H100 1yr rental: $1.70/hr (Oct 2025) → $2.35/hr (Mar 2026), +40%'
+  - source: data/sources/semianalysis/signals.yaml
+    detail: 'AWS p6-b200 spot: $14/hr/GPU'
+  - source: data/sources/semianalysis/signals.yaml
+    detail: AI = 60% of TSMC N3 output (2026), projected 86% by 2027
+  - source: data/sources/semianalysis/signals.yaml
+    detail: Reallocating 5% smartphone N3 wafers = ~100K Rubin GPUs or ~300K TPU v7s
+  confidence: high
+  verify_at: Q1_2026 earnings
+  status: pending
+- claim: Management provides update on n3 logic timeline or capacity plans
+  category: guidance
+  basis:
+  - source: data/thesis.yaml
+    detail: Active bottleneck — watch for forward commentary
+  confidence: medium
+  verify_at: Q1_2026 earnings
+  status: pending
+- claim: Earnings result reinforces (or challenges) current fund positioning thesis for TSM
+  category: positioning
+  basis:
+  - source: data/sources/leopold/
+    detail: Leopold exited TSM
+  confidence: medium
+  verify_at: Q1_2026 earnings + next 13F filing
+  status: pending
+positioning_context:
+  leopold: 'Exited TSM (prior: put $75,000,000)'
+  baker: No position in TSM
+  implied_signal: Neither fund has a significant TSM position
+track_record:
+  total_predictions: 0
+  confirmed: 0
+  missed: 0
+  partial: 0
+  revised: 0
+  accuracy: null
+  by_category: null

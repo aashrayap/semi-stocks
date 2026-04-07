@@ -1,0 +1,39 @@
+ticker: ASML
+quarter: Q1 2026
+predicted_at: '2026-04-07'
+earnings_date: '2026-04-16'
+bottleneck: euv
+bottleneck_status: next
+predictions:
+- claim: Euv begins showing early constraint signals in Q1_2026
+  category: capacity
+  basis:
+  - source: data/thesis.yaml
+    detail: ASML can produce ~100 EUV tools/yr by 2030 (Zeiss optics is the constraint)
+  - source: data/thesis.yaml
+    detail: 3.5 EUV tools per gigawatt of fab capacity
+  - source: wiki/concepts/bottleneck-cascade.md
+    detail: See wiki/concepts/bottleneck-cascade.md for compiled bottleneck analysis
+  confidence: low
+  verify_at: Q1_2026 earnings
+  status: pending
+- claim: Management acknowledges euv as emerging constraint or investment area
+  category: guidance
+  basis:
+  - source: data/thesis.yaml
+    detail: Next-in-line bottleneck — watch for early signals
+  confidence: low
+  verify_at: Q1_2026 earnings
+  status: pending
+positioning_context:
+  leopold: No position in ASML
+  baker: No position in ASML
+  implied_signal: Neither fund has a significant ASML position
+track_record:
+  total_predictions: 0
+  confirmed: 0
+  missed: 0
+  partial: 0
+  revised: 0
+  accuracy: null
+  by_category: null

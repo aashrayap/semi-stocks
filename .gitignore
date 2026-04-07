@@ -3,11 +3,11 @@ __pycache__/
 *.pyc
 .claude/
 
-# Generated artifacts
+# Generated artifacts (main report — regeneratable from data/)
 reports/
-agents/reports/
+
+# Agent ephemeral (logs are high-volume, not worth tracking)
 agents/logs/
-agents/state/
 
 # Raw transcripts — copyright risk, large, regeneratable from public sources
 # The wiki/sources/ summaries are the useful layer
