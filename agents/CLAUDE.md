@@ -54,6 +54,60 @@ The agent fleet runs a prediction-scoring loop around every earnings call:
 
 This loop makes the research system self-correcting: if capacity predictions are always right but guidance predictions always miss, the system learns which categories and sources to trust.
 
+## AutoAgent Backtest Loop
+
+The AutoAgent is a meta-agent that optimizes `agents/src/pre_earnings_predictor.py` by backtesting against historical earnings with known outcomes.
+
+### Key Files
+
+| File | Purpose |
+|---|---|
+| `agents/autoagent/program.md` | Full directive for the meta-agent (goals, levers, constraints) |
+| `agents/autoagent/backtest.py` | Standalone backtest runner script |
+| `agents/autoagent/tasks/<TASK_ID>/task.yaml` | Task metadata (ticker, quarter, dates, bottleneck) |
+| `agents/autoagent/tasks/<TASK_ID>/known_outcomes.yaml` | Actual earnings results by category |
+| `agents/autoagent/experiments/` | Timestamped experiment logs |
+
+### Running Backtests
+
+```bash
+# List available tasks
+python agents/autoagent/backtest.py --list
+
+# Run a single task
+python agents/autoagent/backtest.py --task CRWV-Q4-2025 --verbose
+
+# Run all tasks
+python agents/autoagent/backtest.py --all --verbose
+
+# Run with an experiment label (for tracking what you changed)
+python agents/autoagent/backtest.py --all --verbose --label "increased SA weight to 5"
+```
+
+### Interpreting Scores
+
+The score formula: `(confirmed + 0.5 * partial) / total_predictions`
+
+| Score Range | Interpretation |
+|---|---|
+| > 0.85 | Excellent — templates well-calibrated for these bottleneck types |
+| 0.75 - 0.85 | Good — strong predictor with room for tuning |
+| 0.50 - 0.75 | Moderate — significant template or weighting issues to address |
+| < 0.50 | Poor — fundamental template problems, likely generating wrong claim types |
+
+Check category-level breakdown to find where the predictor is strongest/weakest. Check source-level data to determine which basis sources correlate with accuracy.
+
+### Meta-Agent Optimization Approach
+
+1. Run baseline: `python agents/autoagent/backtest.py --all --verbose`
+2. Read `agents/autoagent/program.md` for the five optimization levers
+3. Modify `agents/src/pre_earnings_predictor.py` (one lever at a time)
+4. Re-run backtest, compare scores
+5. Keep changes that improve aggregate score; revert those that don't
+6. Each experiment is automatically logged to `agents/autoagent/experiments/`
+
+Available levers: prediction template text, confidence calibration, source weighting, category selection, evidence scanning patterns. See `program.md` for details and constraints.
+
 ## Operating Rules
 
 1. **Drafts are proposals.** Files in `agents/drafts/` are suggestions. A human reviews and decides whether to promote content to the main `data/` or `wiki/` directories.
