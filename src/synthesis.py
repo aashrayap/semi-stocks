@@ -167,6 +167,102 @@ def divergences() -> list[dict]:
     return divs
 
 
+def cycle_assessment() -> list[dict]:
+    """Generate Baker-framework cycle risk assessment per cascade stage.
+
+    Reads cycle_phase, cycle_signal, and cycle_risk_flags from thesis.yaml
+    and returns a structured assessment for each stage.
+    """
+    thesis = load_thesis()
+    cascade = thesis.get("cascade", [])
+
+    PHASE_META = {
+        "resolved":       {"label": "Resolved",       "action": "—",           "risk": 0},
+        "post_peak":      {"label": "Post-Peak",      "action": "Avoid",       "risk": 1},
+        "peak_shortage":  {"label": "Peak Shortage",   "action": "Long + Puts", "risk": 3},
+        "mid_shortage":   {"label": "Mid Shortage",    "action": "Long + Hedge","risk": 2},
+        "early_cycle":    {"label": "Early Cycle",     "action": "Long",        "risk": 1},
+        "pre_cycle":      {"label": "Pre-Cycle",       "action": "Watch",       "risk": 0},
+    }
+
+    results = []
+    for stage in cascade:
+        phase = stage.get("cycle_phase", "")
+        meta = PHASE_META.get(phase, {"label": phase, "action": "?", "risk": 0})
+        results.append({
+            "name": stage["name"],
+            "status": stage["status"],
+            "cycle_phase": phase,
+            "cycle_label": meta["label"],
+            "cycle_action": meta["action"],
+            "cycle_risk": meta["risk"],
+            "cycle_signal": stage.get("cycle_signal", ""),
+            "cycle_risk_flags": stage.get("cycle_risk_flags", []),
+            "tickers": stage.get("tickers", []),
+            "period": stage.get("period", ""),
+        })
+
+    return results
+
+
+def baker_hedge_ratio() -> dict:
+    """Return Baker's current hedge ratio and trend from thesis.yaml."""
+    thesis = load_thesis()
+    data = thesis.get("baker_hedge_ratio", {})
+    return {
+        "ratio": data.get("q4_2025"),
+        "trend": data.get("trend", "unknown"),
+    }
+
+
+def earnings_dashboard() -> list[dict]:
+    """Consolidated per-ticker earnings dashboard.
+
+    Merges forward claims, thesis signals, and SemiAnalysis signals
+    into one row per deep-dive ticker.
+    """
+    thesis = load_thesis()
+    ticker_map = thesis.get("ticker_map", {})
+    _, _, semi = get_sources()
+
+    companies = _load_company_yamls()
+
+    # Build per-ticker rollup
+    ticker_data = {}
+    for company in companies:
+        ticker = company.get("ticker", "?")
+        quarter = company.get("quarter", "?")
+
+        claims = company.get("forward_claims", [])
+        pending = sum(1 for c in claims if c.get("status") == "pending")
+        confirmed = sum(1 for c in claims if c.get("status") == "confirmed")
+        missed = sum(1 for c in claims if c.get("status") == "missed")
+
+        signals = company.get("thesis_signals", [])
+        confirms = sum(1 for s in signals if s.get("direction") == "confirms")
+        contradicts = sum(1 for s in signals if s.get("direction") == "contradicts")
+
+        ticker_data[ticker] = {
+            "ticker": ticker,
+            "quarter": quarter,
+            "next_earnings": ticker_map.get(ticker, {}).get("next_earnings"),
+            "claims_pending": pending,
+            "claims_confirmed": confirmed,
+            "claims_missed": missed,
+            "signals_confirms": confirms,
+            "signals_contradicts": contradicts,
+            "semi_signals": [],
+        }
+
+    # Add SemiAnalysis signals per ticker
+    for ticker in ticker_data:
+        s = semi.lookup(ticker)
+        if s and "signals" in s:
+            ticker_data[ticker]["semi_signals"] = s["signals"][:2]  # top 2
+
+    return sorted(ticker_data.values(), key=lambda x: x.get("next_earnings") or "9999")
+
+
 def _load_company_yamls() -> list[dict]:
     """Load all company quarter YAMLs from data/companies/."""
     results = []
@@ -297,6 +393,16 @@ def concept_drift() -> list[dict]:
 
     return findings
 
+
+BOTTLENECK_ONE_LINERS = {
+    "CoWoS packaging": "Chip-on-wafer stacking for GPU+HBM. TSMC monopoly. Resolved.",
+    "Power / DC buildout": "Data centers need power + cooling. 2-3yr build. Miners converting.",
+    "Memory supercycle": "AI consumes all HBM/DRAM. Prices +90% QoQ. All vendors sold out.",
+    "N3 logic wafers": "TSMC 3nm at 100%+ util. Every AI chip competes for same lines.",
+    "Pluggable optics (scale-out)": "800G/1.6T transceivers in every GPU rack. Revenue flowing now.",
+    "Co-packaged optics / CPO (scale-up)": "Laser-on-chip for next-gen racks. Volume 2028+.",
+    "EUV tools": "ASML monopoly. ~100 tools/yr ceiling. Final cascade bottleneck.",
+}
 
 BOTTLENECK_EXPLAINERS = {
     "CoWoS packaging": (

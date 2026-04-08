@@ -15,6 +15,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -31,20 +32,29 @@ except ImportError:
 # Path resolution
 # ---------------------------------------------------------------------------
 
+def _env_path(name: str, default: Path) -> Path:
+    raw = os.environ.get(name)
+    return Path(raw).expanduser().resolve() if raw else default.resolve()
+
+
 SCRIPT_DIR = Path(__file__).resolve().parent          # agents/src/
 AGENTS_DIR = SCRIPT_DIR.parent                        # agents/
 REPO_ROOT = AGENTS_DIR.parent                         # semi-stocks/
+READ_ROOT = _env_path("SEMI_STOCKS_READ_ROOT", REPO_ROOT)
+STATE_ROOT = _env_path("SEMI_STOCKS_STATE_ROOT", AGENTS_DIR)
 
-THESIS_PATH = REPO_ROOT / "data" / "thesis.yaml"
-COMPANIES_DIR = REPO_ROOT / "data" / "companies"
-LEOPOLD_DIR = REPO_ROOT / "data" / "sources" / "leopold"
-BAKER_DIR = REPO_ROOT / "data" / "sources" / "baker"
-SEMIANALYSIS_DIR = REPO_ROOT / "data" / "sources" / "semianalysis"
-WIKI_CONCEPTS_DIR = REPO_ROOT / "wiki" / "concepts"
-WIKI_SOURCES_DIR = REPO_ROOT / "wiki" / "sources"
+THESIS_PATH = READ_ROOT / "data" / "thesis.yaml"
+COMPANIES_DIR = READ_ROOT / "data" / "companies"
+LEOPOLD_DIR = READ_ROOT / "data" / "sources" / "leopold"
+BAKER_DIR = READ_ROOT / "data" / "sources" / "baker"
+SEMIANALYSIS_DIR = READ_ROOT / "data" / "sources" / "semianalysis"
+WIKI_CONCEPTS_DIR = READ_ROOT / "wiki" / "concepts"
+WIKI_SOURCES_DIR = READ_ROOT / "wiki" / "sources"
 AGENT_CONFIG_PATH = AGENTS_DIR / "config.yaml"
-PREDICTIONS_DIR = AGENTS_DIR / "state" / "predictions"
-LOGS_DIR = AGENTS_DIR / "logs"
+PREDICTIONS_DIR = STATE_ROOT / "state" / "predictions"
+LOGS_DIR = STATE_ROOT / "logs"
+
+RUNTIME_AS_OF_DATE: date | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -65,6 +75,44 @@ def dump_yaml(data: dict, path: Path) -> None:
     with open(path, "w") as f:
         yaml.dump(data, f, default_flow_style=False, sort_keys=False,
                   allow_unicode=True, width=120)
+
+
+def parse_iso_date(value: Any) -> date | None:
+    """Parse YYYY-MM-DD-ish values, returning None for non-date strings."""
+    if value in (None, ""):
+        return None
+    text = str(value).strip()
+    if len(text) >= 10:
+        text = text[:10]
+    try:
+        return datetime.strptime(text, "%Y-%m-%d").date()
+    except ValueError:
+        return None
+
+
+def is_visible_on_or_before(as_of: date | None, visible_date: date | None) -> bool:
+    """Whether a public data point is visible on a given as-of date."""
+    if as_of is None or visible_date is None:
+        return True
+    return visible_date <= as_of
+
+
+def is_reported_before(as_of: date | None, report_date: date | None) -> bool:
+    """Whether reported results existed before the simulated prediction date."""
+    if as_of is None or report_date is None:
+        return True
+    return report_date < as_of
+
+
+def display_path(path: Path) -> str:
+    """Render a path relative to the active read/state roots when possible."""
+    resolved = path.resolve()
+    for base in (STATE_ROOT, READ_ROOT, REPO_ROOT):
+        try:
+            return str(resolved.relative_to(base.resolve()))
+        except ValueError:
+            continue
+    return str(resolved)
 
 
 # ---------------------------------------------------------------------------
@@ -116,13 +164,19 @@ def get_company_quarters(ticker: str) -> list[dict]:
     company_dir = COMPANIES_DIR / ticker
     if not company_dir.is_dir():
         return []
-    results = []
+    results: list[tuple[date, str, dict]] = []
     for f in sorted(company_dir.glob("*.yaml")):
         data = load_yaml(f)
         if data:
-            data["_file"] = str(f.relative_to(REPO_ROOT))
-            results.append(data)
-    return results
+            report_date = (parse_iso_date(data.get("earnings_date"))
+                           or parse_iso_date(data.get("period")))
+            if not is_reported_before(RUNTIME_AS_OF_DATE, report_date):
+                continue
+            data["_file"] = display_path(f)
+            sort_key = report_date or date.min
+            results.append((sort_key, f.name, data))
+    results.sort(key=lambda item: (item[0], item[1]))
+    return [data for _, _, data in results]
 
 
 def get_latest_company_data(ticker: str) -> dict | None:
@@ -154,12 +208,15 @@ def get_fund_positions(fund_dir: Path) -> list[dict]:
     if not fund_dir.is_dir():
         return []
     files = sorted(fund_dir.glob("*.yaml"), key=lambda p: p.name, reverse=True)
-    if not files:
-        return []
-    data = load_yaml(files[0])
-    if not data:
-        return []
-    return data.get("positions", [])
+    for f in files:
+        data = load_yaml(f)
+        if not data:
+            continue
+        filed_date = (parse_iso_date(data.get("filed"))
+                      or parse_iso_date(data.get("period")))
+        if is_visible_on_or_before(RUNTIME_AS_OF_DATE, filed_date):
+            return data.get("positions", [])
+    return []
 
 
 def get_fund_position_for_ticker(fund_dir: Path, ticker: str) -> list[dict]:
@@ -173,18 +230,36 @@ def get_fund_exits(fund_dir: Path) -> list[dict]:
     if not fund_dir.is_dir():
         return []
     files = sorted(fund_dir.glob("*.yaml"), key=lambda p: p.name, reverse=True)
-    if not files:
-        return []
-    data = load_yaml(files[0])
-    if not data:
-        return []
-    return data.get("exits", [])
+    for f in files:
+        data = load_yaml(f)
+        if not data:
+            continue
+        filed_date = (parse_iso_date(data.get("filed"))
+                      or parse_iso_date(data.get("period")))
+        if is_visible_on_or_before(RUNTIME_AS_OF_DATE, filed_date):
+            return data.get("exits", [])
+    return []
 
 
 def get_semianalysis_signals() -> dict:
     """Load SemiAnalysis signals."""
     data = load_yaml(SEMIANALYSIS_DIR / "signals.yaml")
-    return data if data else {}
+    if not data:
+        return {}
+
+    if RUNTIME_AS_OF_DATE is None:
+        return data
+
+    filtered = dict(data)
+    for key in ("signals", "media", "market_data"):
+        entries = data.get(key)
+        if not isinstance(entries, list):
+            continue
+        filtered[key] = [
+            entry for entry in entries
+            if is_visible_on_or_before(RUNTIME_AS_OF_DATE, parse_iso_date(entry.get("date")))
+        ]
+    return filtered
 
 
 def get_semianalysis_for_ticker(ticker: str) -> list[dict]:
@@ -228,7 +303,7 @@ def get_wiki_concept_for_bottleneck(bottleneck: str) -> str | None:
         return None
     concept_path = WIKI_CONCEPTS_DIR / f"{slug}.md"
     if concept_path.exists():
-        return str(concept_path.relative_to(REPO_ROOT))
+        return display_path(concept_path)
     return None
 
 
@@ -236,7 +311,7 @@ def get_wiki_sources_for_ticker(ticker: str) -> list[str]:
     """Find wiki source pages for a ticker."""
     ticker_lower = ticker.lower()
     paths = sorted(WIKI_SOURCES_DIR.glob(f"{ticker_lower}-*.md"))
-    return [str(p.relative_to(REPO_ROOT)) for p in paths]
+    return [display_path(p) for p in paths]
 
 
 def get_prior_predictions(ticker: str) -> list[dict]:
@@ -246,7 +321,10 @@ def get_prior_predictions(ticker: str) -> list[dict]:
     for f in sorted(PREDICTIONS_DIR.glob(f"{ticker}-*.yaml")):
         data = load_yaml(f)
         if data:
-            data["_file"] = str(f.relative_to(REPO_ROOT))
+            predicted_at = parse_iso_date(data.get("predicted_at"))
+            if RUNTIME_AS_OF_DATE is not None and predicted_at is not None and predicted_at >= RUNTIME_AS_OF_DATE:
+                continue
+            data["_file"] = display_path(f)
             preds.append(data)
     return preds
 
@@ -921,6 +999,8 @@ def write_log(today: date, tickers_processed: list[str],
 # ---------------------------------------------------------------------------
 
 def main() -> None:
+    global RUNTIME_AS_OF_DATE
+
     parser = argparse.ArgumentParser(
         description="Pre-earnings prediction generator. Reads the knowledge graph "
                     "and generates testable predictions for upcoming earnings.")
@@ -934,7 +1014,7 @@ def main() -> None:
     parser.add_argument("--dry-run", action="store_true",
                         help="Print YAML to stdout without writing files")
     parser.add_argument("--date", type=str, default=None,
-                        help="Override today's date (YYYY-MM-DD) for testing")
+                        help="Override today's date (YYYY-MM-DD) and filter dated inputs as-of that day")
     args = parser.parse_args()
 
     if not args.ticker and not args.all_upcoming:
@@ -945,6 +1025,7 @@ def main() -> None:
         today = datetime.strptime(args.date, "%Y-%m-%d").date()
     else:
         today = date.today()
+    RUNTIME_AS_OF_DATE = today
 
     # Validate thesis.yaml is loadable
     thesis = get_thesis()
@@ -1007,7 +1088,7 @@ def main() -> None:
             PREDICTIONS_DIR.mkdir(parents=True, exist_ok=True)
             out_path = PREDICTIONS_DIR / f"{ticker}-{quarter}.yaml"
             dump_yaml(doc, out_path)
-            rel_path = str(out_path.relative_to(REPO_ROOT))
+            rel_path = display_path(out_path)
             files_written.append(rel_path)
             print(f"  Written to {rel_path}")
 

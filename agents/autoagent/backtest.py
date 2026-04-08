@@ -15,7 +15,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import json
+import os
 import re
 import subprocess
 import sys
@@ -41,7 +41,6 @@ REPO_ROOT = AGENTS_DIR.parent                               # semi-stocks/
 TASKS_DIR = SCRIPT_DIR / "tasks"
 EXPERIMENTS_DIR = SCRIPT_DIR / "experiments"
 PREDICTOR_SCRIPT = AGENTS_DIR / "src" / "pre_earnings_predictor.py"
-COMPANIES_DIR = REPO_ROOT / "data" / "companies"
 
 
 # ---------------------------------------------------------------------------
@@ -95,7 +94,8 @@ def load_task(task_id: str) -> tuple[dict, dict]:
 # Predictor invocation
 # ---------------------------------------------------------------------------
 
-def run_predictor(ticker: str, quarter: str, pre_date: str) -> dict | None:
+def run_predictor(ticker: str, quarter: str, pre_date: str,
+                  read_root: Path) -> tuple[dict | None, str]:
     """Run the pre-earnings predictor and capture its YAML output.
 
     Uses --dry-run so the predictor prints to stdout without writing files.
@@ -109,22 +109,28 @@ def run_predictor(ticker: str, quarter: str, pre_date: str) -> dict | None:
         "--dry-run",
     ]
 
-    try:
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            timeout=30,
-            cwd=str(REPO_ROOT),
-        )
-    except subprocess.TimeoutExpired:
-        print(f"  ERROR: Predictor timed out for {ticker} {quarter}", file=sys.stderr)
-        return None
+    with tempfile.TemporaryDirectory(prefix=f"autoagent-{ticker.lower()}-") as temp_dir:
+        env = os.environ.copy()
+        env["SEMI_STOCKS_READ_ROOT"] = str(read_root)
+        env["SEMI_STOCKS_STATE_ROOT"] = str(Path(temp_dir) / "agents")
+
+        try:
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=30,
+                cwd=str(REPO_ROOT),
+                env=env,
+            )
+        except subprocess.TimeoutExpired:
+            print(f"  ERROR: Predictor timed out for {ticker} {quarter}", file=sys.stderr)
+            return None, "timeout"
 
     if result.returncode != 0:
         print(f"  ERROR: Predictor failed for {ticker} {quarter}", file=sys.stderr)
         print(f"  stderr: {result.stderr.strip()}", file=sys.stderr)
-        return None
+        return None, "error"
 
     # The predictor prints some status lines then a YAML document after "---"
     stdout = result.stdout
@@ -136,7 +142,7 @@ def run_predictor(ticker: str, quarter: str, pre_date: str) -> dict | None:
             print(f"  ERROR: No YAML output found in predictor stdout", file=sys.stderr)
             if stdout.strip():
                 print(f"  stdout: {stdout[:500]}", file=sys.stderr)
-            return None
+            return None, "error"
 
     yaml_text = stdout[yaml_start:]
     # Strip the leading "---" line
@@ -149,9 +155,17 @@ def run_predictor(ticker: str, quarter: str, pre_date: str) -> dict | None:
         doc = yaml.safe_load(yaml_text)
     except yaml.YAMLError as e:
         print(f"  ERROR: Failed to parse predictor YAML output: {e}", file=sys.stderr)
-        return None
+        return None, "error"
 
-    return doc
+    return doc, "ok"
+
+
+def get_task_snapshot_root(task_id: str) -> Path | None:
+    """Return the frozen input snapshot for a task, if present."""
+    snapshot_root = TASKS_DIR / task_id / "snapshot"
+    if snapshot_root.is_dir():
+        return snapshot_root
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -368,12 +382,20 @@ def run_task(task_id: str, verbose: bool = False) -> dict:
     pre_date = task_meta.get("pre_earnings_date", "")
     bottleneck = task_meta.get("bottleneck", "unknown")
     earnings_date = task_meta.get("earnings_date", "unknown")
+    snapshot_root = get_task_snapshot_root(task_id)
+    input_mode = "snapshot" if snapshot_root else "live"
+    read_root = snapshot_root if snapshot_root else REPO_ROOT
 
     print(f"  Ticker: {ticker}")
     print(f"  Quarter: {quarter}")
     print(f"  Earnings date: {earnings_date}")
     print(f"  Bottleneck: {bottleneck}")
     print(f"  Simulated date: {pre_date}")
+    print(f"  Input mode: {input_mode}")
+    if snapshot_root:
+        print(f"  Snapshot root: {snapshot_root.relative_to(REPO_ROOT)}")
+    else:
+        print(f"  WARNING: No task snapshot found. Live undated inputs may still leak hindsight.")
 
     # The predictor expects quarter in the format used by the CLI (e.g., Q4_2025
     # or Q4_FY2026). Normalize: replace spaces with underscores.
@@ -381,11 +403,16 @@ def run_task(task_id: str, verbose: bool = False) -> dict:
 
     # Run the predictor
     print(f"\n  Running predictor (--ticker {ticker} --quarter {quarter_cli} --date {pre_date})...")
-    predictions_doc = run_predictor(ticker, quarter_cli, pre_date)
+    predictions_doc, predictor_status = run_predictor(ticker, quarter_cli, pre_date, read_root)
 
     if predictions_doc is None:
         print(f"  FAILED: Predictor returned no output", file=sys.stderr)
-        return {"error": "predictor_failed", "score": None}
+        return {
+            "error": "predictor_failed",
+            "predictor_status": predictor_status,
+            "input_mode": input_mode,
+            "score": None,
+        }
 
     pred_count = len(predictions_doc.get("predictions", []))
     print(f"  Predictor generated {pred_count} prediction(s)")
@@ -399,6 +426,7 @@ def run_task(task_id: str, verbose: bool = False) -> dict:
     # Score predictions against known outcomes
     print(f"\n  Scoring against known outcomes...")
     result = score_predictions(predictions_doc, known_outcomes, verbose=verbose)
+    result["input_mode"] = input_mode
 
     # Print results
     print(f"\n  Results:")
@@ -465,7 +493,8 @@ def main() -> None:
                 meta = load_yaml(TASKS_DIR / t / "task.yaml")
                 if meta:
                     print(f"  {t}: {meta.get('ticker', '?')} {meta.get('quarter', '?')} "
-                          f"({meta.get('bottleneck', '?')})")
+                          f"({meta.get('bottleneck', '?')}, "
+                          f"{'snapshot' if get_task_snapshot_root(t) else 'live'})")
                 else:
                     print(f"  {t}")
         return

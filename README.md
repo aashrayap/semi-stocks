@@ -7,13 +7,14 @@ Investment research framework tracking AI infrastructure bottleneck rotation usi
 AI compute demand is chronically underestimated by the semiconductor supply chain. Every supplier builds "X minus 1" of what's needed. Bottlenecks shift in sequence — whoever identifies the *next* binding constraint before consensus captures outsized returns.
 
 ```
-BOTTLENECK CASCADE (confirmed sequence)
-════════════════════════════════════════════════════════════════════
+BOTTLENECK CASCADE (confirmed sequence + cycle phase)
+════════════════════════════════════════════════════════════════════════════
 
-  2023          2024           2025           2026-27        2028-30
+  2023          2024           2025-26        2025-27        2028-30
   CoWoS         Power/DC       Memory         N3 logic       EUV tools
   packaging     buildout       supercycle     wafers         (ASML ceiling)
-  ✅ played out  ✅ played out   🔴 active       🟡 emerging     🟡 next
+  ✅ resolved    ✅ post-peak    🔴 PEAK SHORT   🟠 mid short    ⚪ pre-cycle
+                                → hedge now    → long+hedge    → watch
 ```
 
 ## Quality Sources
@@ -73,21 +74,32 @@ BOTTLENECK CASCADE (confirmed sequence)
 
 ## Actionable Framework
 
-The meta-principle: **buy the next bottleneck before it becomes consensus, sell the current one as it becomes consensus.**
+Two orthogonal dimensions drive positioning:
+
+1. **Which bottleneck** (rotation) — buy the *next* constraint before consensus, sell as it becomes consensus
+2. **When in the cycle** (timing) — Baker's "iron law": every shortage is followed by a glut. Buy at high P/E (trough earnings), sell/hedge at low P/E (peak earnings). Lead times are the signal.
 
 ```
+DIMENSION 1: WHICH BOTTLENECK
+
 IF you believe power is the binding constraint (Leopold's view):
   → BE, bitcoin miners (CORZ, IREN, CIFR), EQT, CRWV
 
 IF you believe semicon supply chain is binding (Baker's view):
   → NVDA calls, COHR, CIEN, ALAB, MU, PSTG
 
-IF you believe both are right on different timescales:
-  → Power names NOW, rotate to ASML/equipment 2027-28
-
 Overlap zone (both agree):
   → COHR, LITE (optical interconnect)
+
+DIMENSION 2: WHEN IN THE CYCLE (Baker framework)
+
+  Memory (MU):    PEAK SHORTAGE → Long + puts (Baker: $411M common + $200M puts)
+  N3 (NVDA/TSM):  MID SHORTAGE  → Long + macro hedge (Baker: $1B NVDA + $2.2B QQQ puts)
+  Optics (COHR):  EARLY CYCLE   → Long (revenue just started, no glut history yet)
+  Equipment:      PRE-CYCLE     → Watch (ASML record bookings = approach with caution)
 ```
+
+See `wiki/outputs/baker-cyclicality-thesis.md` for the full evidence base (6 subsectors, P/E data, lead times).
 
 ## Research Pipeline
 
@@ -105,6 +117,48 @@ wiki/raw/              → wiki/sources/           → data/companies/        �
 - **data/thesis.yaml** — Cascade status. Updated only when earnings data actually shifts a bottleneck.
 
 See `wiki/schema.md` for wiki conventions and `CLAUDE.md` for the full earnings pipeline process.
+
+## Architecture Lanes
+
+The repo has two lanes with different authority:
+
+```
+CANONICAL TRUTH LANE (stable, authoritative)
+
+external sources
+  -> wiki/raw/
+  -> wiki/sources/
+  -> data/companies/ + data/sources/
+  -> data/thesis.yaml
+  -> src/synthesis.py + src/report.py
+  -> canonical research output
+
+trust increases and scope narrows as data moves right
+```
+
+```
+AGENT SIDECAR LANE (fast iteration, non-authoritative)
+
+reads wiki/* + data/* + data/thesis.yaml
+  -> agents/src/*
+  -> agents/state/* + agents/reports/* + agents/drafts/* + agents/logs/*
+  -> agents/autoagent/* backtests and experiments
+
+agents can read the full repo but only write under agents/
+```
+
+```
+HUMAN PROMOTION GATE (the only bridge back)
+
+agents output
+  -> human review
+  -> optional promotion into wiki/ or data/
+  -> thesis/report updates only after human acceptance
+```
+
+- **Stable:** the truth lane, the write boundary, and `data/thesis.yaml` as the control plane.
+- **Less stable:** agent templates, backtest task coverage, and evaluation logic inside `agents/`.
+- **Key principle:** agents improve speed, repeatability, and falsifiability without becoming a second source of truth.
 
 ## Data Refresh Cadence
 

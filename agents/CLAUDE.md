@@ -66,6 +66,7 @@ The AutoAgent is a meta-agent that optimizes `agents/src/pre_earnings_predictor.
 | `agents/autoagent/backtest.py` | Standalone backtest runner script |
 | `agents/autoagent/tasks/<TASK_ID>/task.yaml` | Task metadata (ticker, quarter, dates, bottleneck) |
 | `agents/autoagent/tasks/<TASK_ID>/known_outcomes.yaml` | Actual earnings results by category |
+| `agents/autoagent/tasks/<TASK_ID>/snapshot/` | Frozen pre-earnings input state used to avoid hindsight leakage |
 | `agents/autoagent/experiments/` | Timestamped experiment logs |
 
 ### Running Backtests
@@ -96,6 +97,8 @@ The score formula: `(confirmed + 0.5 * partial) / total_predictions`
 | < 0.50 | Poor — fundamental template problems, likely generating wrong claim types |
 
 Check category-level breakdown to find where the predictor is strongest/weakest. Check source-level data to determine which basis sources correlate with accuracy.
+
+Backtests should prefer task-local frozen snapshots over the live repo when simulating a pre-earnings date. `--date` filters dated inputs, but undated inputs like `data/thesis.yaml` still require a frozen snapshot for a valid replay.
 
 ### Meta-Agent Optimization Approach
 

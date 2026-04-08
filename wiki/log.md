@@ -4,6 +4,23 @@ Append-only record of wiki activity. Each entry starts with `## [date] action | 
 
 ---
 
+## [2026-04-07] update | Report restructure + cycle risk integration
+
+Restructured report from 9 sections → 5 (3 main + summary + collapsed drift):
+1. Summary (+ cycle risk sentence, Baker hedge ratio)
+2. Cascade + Cycle Risk (merged cascade, explainers→one-liners, cycle phase/action/flags)
+3. Positions + Signals (merged agreement map + divergences inline)
+4. Earnings Dashboard (merged forward claims + thesis signals + SemiAnalysis per ticker)
+5. Drift (collapsed `<details>`, count badge only)
+
+Added to `thesis.yaml`: `cycle_phase`, `cycle_signal`, `cycle_risk_flags` per cascade stage. `baker_hedge_ratio` as tracked metric (0.70, trend: increasing).
+
+Added to `synthesis.py`: `cycle_assessment()`, `baker_hedge_ratio()`, `earnings_dashboard()`, `BOTTLENECK_ONE_LINERS`.
+
+Updated `README.md` actionable framework: two dimensions (which bottleneck + when in cycle).
+
+---
+
 ## [2026-04-07] query → output | Baker's cyclicality thesis — "every shortage followed by a glut"
 
 Filed to `outputs/baker-cyclicality-thesis.md`. Research dispatched across 7 parallel subagents covering: Memory (MU), Foundry (TSM), Equipment (ASML/LRCX/AMAT), Broadcom (AVGO), Auto/Analog (TXN/ON/NXPI/ADI), GPU (NVDA/AMD), and Baker's public commentary. Synthesized evidence matrix, P/E compression data, lead time signals, and counter-arguments. Key finding: Baker's framework confirmed across all subsectors except AVGO (partial exception due to software mix and supply discipline). TXN is the single strongest proof point — P/E 16x at peak earnings, 38x at trough, stock higher during glut.

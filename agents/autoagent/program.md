@@ -115,6 +115,7 @@ Each experiment is logged with a timestamp, the score, and a description of what
 Task directories live at `agents/autoagent/tasks/<TASK_ID>/` and contain:
 - `task.yaml` — metadata (ticker, quarter, earnings date, bottleneck, pre-earnings date)
 - `known_outcomes.yaml` — actual results by category with status and evidence
+- `snapshot/` — frozen pre-earnings input tree used to replay the predictor without head-state leakage
 
 ## Success Criteria
 

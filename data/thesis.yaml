@@ -1,14 +1,24 @@
 updated: "2026-04-07"
 
+# Baker cycle framework — applied to each cascade stage
+# cycle_phase: resolved | post_peak | peak_shortage | mid_shortage | early_cycle | pre_cycle
+# See wiki/outputs/baker-cyclicality-thesis.md for full evidence
+baker_hedge_ratio:
+  q4_2025: 0.70   # $2.15B QQQ puts / ~$3B semi longs
+  trend: increasing  # was ~0.40 prior quarter — hedge growing faster than longs
+
 cascade:
   - name: CoWoS packaging
     status: played_out
+    cycle_phase: resolved
     period: "2023"
     tickers: [ASX, AMAT]
     notes: "TSMC ramped CoWoS capacity to ~1M wafers/yr by 2026. Nvidia has 60%."
 
   - name: Power / DC buildout
     status: played_out
+    cycle_phase: post_peak
+    cycle_signal: "56 GW announced — overcapacity risk emerging. Leopold still positioned."
     period: "2024"
     tickers: [VST, CEG, TLN, VRT]
     notes: >
@@ -17,6 +27,8 @@ cascade:
 
   - name: Memory supercycle
     status: active
+    cycle_phase: peak_shortage
+    cycle_signal: "Fwd P/E compressing 20x→10x. All 3 vendors expanding capacity. Baker long+puts."
     period: "2025-2026"
     tickers: [MU, SNDK]
     signals:
@@ -27,10 +39,17 @@ cascade:
       - "All vendors (SK Hynix, Samsung, Micron) sold out through 2026"
       - "Smartphone volumes declining — DRAM demand destruction freeing supply for AI"
       - "NVIDIA $21.4B inventory includes significant HBM stockpile (Q4 FY2026)"
+    cycle_risk_flags:
+      - "MU fwd P/E compressing to 10-12x on record EPS $12.20 — classic peak signal"
+      - "All 3 vendors (SK Hynix, Samsung, Micron) expanding capacity simultaneously"
+      - "NVIDIA $21.4B inventory = double-ordering at chip level (10x the FY2023 write-down)"
+      - "Google TurboQuant: 6x memory footprint reduction — potential demand destruction"
     notes: "Baker is long MU + put hedge. Leopold exited MU puts in Q4."
 
   - name: N3 logic wafers
     status: active
+    cycle_phase: mid_shortage
+    cycle_signal: "Utilization 100%+, but supply response slower (3-5yr fab build). Less immediate glut risk than memory."
     period: "2025-2027"
     tickers: [TSM, NVDA, AVGO, INTC]
     signals:
@@ -41,12 +60,18 @@ cascade:
       - "Reallocating 5% of smartphone N3 wafers = ~100K Rubin GPUs"
       - "NVIDIA supply commitments doubled $50.3B → $95.2B QoQ, capacity secured through CY2027 (Q4 FY2026)"
       - "Vera Rubin samples shipped, production H2 2026 — six new chips this cycle all on N3"
+    cycle_risk_flags:
+      - "NVDA $95.2B supply commitments (doubled QoQ) = capacity locked even if demand slows"
+      - "NVDA fwd P/E compressing from 60x+ to 21x — shortage-phase compression underway"
+      - "Intel empty fabs = eventual supply addition (18A ramp 2025-2026)"
     notes: >
       Originally sequenced after memory but SemiAnalysis data shows both binding simultaneously.
       Baker massive NVDA long ($1B+). Leopold holds INTC calls ($749M) but exited NVDA.
 
   - name: Pluggable optics (scale-out)
     status: active
+    cycle_phase: early_cycle
+    cycle_signal: "Revenue just started flowing. No shortage/glut history as AI play. Baker trimming LITE -42% (profit-taking?)."
     period: "2025-2027"
     tickers: [COHR, LITE, CIEN]
     signals:
@@ -56,6 +81,8 @@ cascade:
       - "Blackwell NVL576 prototype 'Polyphe' uses pluggable optics between racks"
       - "Vera ETL256: 32 front-facing OSFP cages per rack for pod connectivity"
       - "NVIDIA networking revenue $11B quarterly (+3.5x YoY), Spectrum-X 'a home run' (Q4 FY2026)"
+    cycle_risk_flags:
+      - "Baker trimmed LITE -42% while Leopold added +604% — directional divergence in consensus zone"
     notes: >
       Revenue is flowing NOW — every rack Nvidia ships has pluggable transceivers.
       This is the current trade. COHR and LITE make 800G/1.6T pluggable transceivers.
@@ -64,6 +91,7 @@ cascade:
 
   - name: Co-packaged optics / CPO (scale-up)
     status: next
+    cycle_phase: pre_cycle
     period: "2028-2030"
     tickers: [COHR, LITE, CIEN, ALAB, SMTC]
     signals:
@@ -83,6 +111,8 @@ cascade:
 
   - name: EUV tools
     status: next
+    cycle_phase: pre_cycle
+    cycle_signal: "ASML bookings hit record EUR 13.2B (Q4 2025) — watch for reversal as peak signal."
     period: "2028-2030"
     tickers: [ASML]
     signals:
