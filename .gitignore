@@ -4,7 +4,7 @@ __pycache__/
 .claude/
 
 # Generated artifacts (main report — regeneratable from data/)
-reports/
+/reports/
 
 # Agent ephemeral (logs are high-volume, not worth tracking)
 agents/logs/
