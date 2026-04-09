@@ -1,0 +1,6 @@
+interface:
+  display_name: "Ingest Semi"
+  short_description: "Route wiki work to this repo's semi-stocks wiki"
+  default_prompt: "Use $ingest-semi to ingest, query, or lint this repo's semi-stocks wiki."
+policy:
+  allow_implicit_invocation: true

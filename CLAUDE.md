@@ -29,6 +29,14 @@ AI compute demand is systematically underestimated. Bottlenecks shift in sequenc
 | `src/synthesis.py` | Agreement map, divergences, cascade status |
 | `src/report.py` | HTML report generator |
 
+## Runtime Routing
+
+<important if="touching the semi-stocks wiki, ingesting a source, or answering a wiki query">
+Treat `wiki/` in the current repo as the only writable wiki root. Do not write to `/Users/ash/Documents/2026/wiki` or `/Users/ash/Documents/2026/semi-stocks/wiki` from this workspace.
+Prefer `/ingest-semi` over the generic `/wiki` flow for semi-stocks wiki ingest, query, and lint work.
+After wiki writes, update `wiki/index.md`, run `python3 ~/.dot-agent/skills/wiki/scripts/rebuild_index.py wiki`, and append `wiki/log.md`.
+</important>
+
 ## Session Rules
 
 <important if="analyzing a new 13F filing or position change">

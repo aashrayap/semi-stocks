@@ -1,7 +1,11 @@
 .DS_Store
 __pycache__/
 *.pyc
-.claude/
+.claude/*
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/ingest-semi/
+!.claude/skills/ingest-semi/SKILL.md
 
 # Generated artifacts (main report — regeneratable from data/)
 /reports/
