@@ -4,6 +4,12 @@ Append-only record of wiki activity. Each entry starts with `## [date] action | 
 
 ---
 
+## [2026-04-09] update | Documentation split + source triangulation
+
+Added `concepts/source-triangulation.md` to capture the repo's core research framework: how SemiAnalysis, Leopold, and Baker interact, what agreement versus divergence means, and when thesis state should be promoted.
+
+Trimmed the root documentation so `README.md` now acts as a landing page while the richer thesis and process context lives in canonical concept and pipeline docs.
+
 ## [2026-04-09] ingest | Semi-stocks repository review
 
 Filed a meta-source reviewing the repo as an institutional research system:

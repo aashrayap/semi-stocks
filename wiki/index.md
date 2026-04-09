@@ -13,6 +13,7 @@ Last updated: 2026-04-09
 | Page | Summary |
 |------|---------|
 | [[concepts/bottleneck-cascade]] | Core thesis — sequential supply chain bottlenecks, rotation trade |
+| [[concepts/source-triangulation]] | How SemiAnalysis, Leopold, and Baker combine into one research framework |
 | [[concepts/research-control-plane]] | Meta-layer around the thesis: expectations, telemetry, portfolio risk, research cadence |
 | [[concepts/power]] | Grid access, cooling, and data-center buildout — played out in market, still a physical deployment constraint |
 | [[concepts/gpu-cloud]] | Deployment layer where chip scarcity turns into booked infrastructure revenue (CRWV) |
