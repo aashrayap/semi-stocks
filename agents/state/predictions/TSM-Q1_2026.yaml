@@ -1,7 +1,7 @@
 ticker: TSM
 quarter: Q1 2026
-predicted_at: '2026-04-07'
-earnings_date: '2026-04-17'
+predicted_at: '2026-04-09'
+earnings_date: '2026-04-16'
 bottleneck: n3_logic
 bottleneck_status: active
 predictions:
@@ -19,18 +19,36 @@ predictions:
   confidence: high
   verify_at: Q1_2026 earnings
   status: pending
+- claim: Management provides update on n3 logic capacity expansion or timeline
+  category: capacity
+  basis:
+  - source: data/companies/TSM/q4_2025.yaml
+    detail: Prior quarter guidance exists — check for capacity expansion updates
+  confidence: medium
+  verify_at: Q1_2026 earnings
+  status: pending
 - claim: ASPs/margins remain strong or expand due to n3 logic constraints
   category: pricing
   basis:
+  - source: data/companies/TSM/q4_2025.yaml
+    detail: Q4 revenue reached $33.73B, 3nm already represented 28% of wafer revenue, and advanced nodes reached 77%. TSMC
+      then guided Q1 to $34.6B-$35.8B, showing leading-edge demand still outrunning supply.
+  - source: data/companies/TSM/q4_2025.yaml
+    detail: TSMC raised its 2026 capital budget to $52B-$56B and is still converting capacity across nodes to support demand.
+      The supply response required is enormous even before any surplus exists.
   - source: data/sources/semianalysis/signals.yaml
     detail: 'H100 1yr rental: $1.70/hr (Oct 2025) → $2.35/hr (Mar 2026), +40%'
   - source: data/sources/semianalysis/signals.yaml
     detail: 'AWS p6-b200 spot: $14/hr/GPU'
-  - source: data/sources/semianalysis/signals.yaml
-    detail: AI = 60% of TSMC N3 output (2026), projected 86% by 2027
-  - source: data/sources/semianalysis/signals.yaml
-    detail: Reallocating 5% smartphone N3 wafers = ~100K Rubin GPUs or ~300K TPU v7s
   confidence: high
+  verify_at: Q1_2026 earnings
+  status: pending
+- claim: 'Verify prior claim: "Q1 2026 gross margin will be between 63% and 65%"'
+  category: pricing
+  basis:
+  - source: data/companies/TSM/q4_2025.yaml
+    detail: Prior forward claim from Management guidance
+  confidence: medium
   verify_at: Q1_2026 earnings
   status: pending
 - claim: Customer demand for n3 logic products remains elevated or accelerating
@@ -47,12 +65,40 @@ predictions:
   confidence: high
   verify_at: Q1_2026 earnings
   status: pending
+- claim: 'Verify margin claim: "Q1 2026 gross margin will be between 63% and 65%"'
+  category: margins
+  basis:
+  - source: data/companies/TSM/q4_2025.yaml
+    detail: Forward claim from Management guidance
+  confidence: medium
+  verify_at: Q1_2026 earnings
+  status: pending
 - claim: Management provides update on n3 logic timeline or capacity plans
   category: guidance
   basis:
-  - source: data/thesis.yaml
-    detail: Active bottleneck — watch for forward commentary
-  confidence: medium
+  - source: data/companies/TSM/q4_2025.yaml
+    detail: Q4 revenue reached $33.73B, 3nm already represented 28% of wafer revenue, and advanced nodes reached 77%. TSMC
+      then guided Q1 to $34.6B-$35.8B, showing leading-edge demand still outrunning supply.
+  - source: data/companies/TSM/q4_2025.yaml
+    detail: TSMC raised its 2026 capital budget to $52B-$56B and is still converting capacity across nodes to support demand.
+      The supply response required is enormous even before any surplus exists.
+  confidence: high
+  verify_at: Q1_2026 earnings
+  status: pending
+- claim: 'Verify forward claim: "Q1 2026 revenue will be between $34.6B and $35.8B"'
+  category: guidance
+  basis:
+  - source: data/companies/TSM/q4_2025.yaml
+    detail: 'Claim from Q4 2025: Management guidance'
+  confidence: high
+  verify_at: Q1_2026 earnings
+  status: pending
+- claim: 'Verify forward claim: "Q1 2026 gross margin will be between 63% and 65%"'
+  category: guidance
+  basis:
+  - source: data/companies/TSM/q4_2025.yaml
+    detail: 'Claim from Q4 2025: Management guidance'
+  confidence: high
   verify_at: Q1_2026 earnings
   status: pending
 - claim: Earnings result reinforces (or challenges) current fund positioning thesis for TSM
@@ -67,6 +113,8 @@ positioning_context:
   leopold: 'Exited TSM (prior: put $75,000,000)'
   baker: No position in TSM
   implied_signal: Neither fund has a significant TSM position
+  divergence_detail: Neither fund is using TSM directly even though it is the central manufacturing choke point. Both prefer
+    downstream or alternative expressions of the bottleneck.
 track_record:
   total_predictions: 0
   confirmed: 0
