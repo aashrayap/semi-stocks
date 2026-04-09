@@ -4,7 +4,7 @@ Master index of all wiki pages. LLM-maintained — do not edit manually.
 
 Thesis-linked: `data/thesis.yaml` | Data sources: `data/sources/`
 
-Last updated: 2026-04-08
+Last updated: 2026-04-09
 
 
 
@@ -13,6 +13,7 @@ Last updated: 2026-04-08
 | Page | Summary |
 |------|---------|
 | [[concepts/bottleneck-cascade]] | Core thesis — sequential supply chain bottlenecks, rotation trade |
+| [[concepts/research-control-plane]] | Meta-layer around the thesis: expectations, telemetry, portfolio risk, research cadence |
 | [[concepts/power]] | Grid access, cooling, and data-center buildout — played out in market, still a physical deployment constraint |
 | [[concepts/gpu-cloud]] | Deployment layer where chip scarcity turns into booked infrastructure revenue (CRWV) |
 | [[concepts/memory-supercycle]] | DRAM/HBM crunch — prices +90% QoQ, all vendors sold out |
@@ -38,6 +39,7 @@ Last updated: 2026-04-08
 | [[sources/intc-q4-2025]] | Intel Q4 2025 Earnings | Q4 2025 |
 | [[sources/tsm-q4-2025]] | TSMC Q4 2025 Earnings | Q4 2025 |
 | [[sources/lite-q2-fy2026]] | Lumentum Q2 FY2026 Earnings | Q2 FY2026 |
+| [[sources/semi-stocks-repository-review-2026-04-09]] | Repository review of missing data layers, workflow gaps, and risk controls | 2026-04-09 |
 
 ## Outputs
 

@@ -4,6 +4,16 @@ Append-only record of wiki activity. Each entry starts with `## [date] action | 
 
 ---
 
+## [2026-04-09] ingest | Semi-stocks repository review
+
+Filed a meta-source reviewing the repo as an institutional research system:
+- **Raw:** `wiki/raw/semi-stocks-repository-review-2026-04-09.md` (workspace attachment copied into the raw layer)
+- **Source:** `sources/semi-stocks-repository-review-2026-04-09.md` (priority gaps, missing layers, implications for the repo)
+
+Added `concepts/research-control-plane.md` to capture the review's core thesis: the repo needs an expectations layer, a broader telemetry layer, a portfolio/risk layer, and repeatable research cadence around earnings and between-quarter data.
+
+Updated `concepts/power.md` to make physical-world telemetry explicit rather than treating power only as an equity narrative.
+
 ## [2026-04-08] ingest | MU / INTC / TSM / LITE deep-dive catch-up
 
 Closed the remaining deep-dive alignment gaps by adding full raw/source/structured company coverage for MU Q2 FY2026, INTC Q4 2025, TSM Q4 2025, and LITE Q2 FY2026.
