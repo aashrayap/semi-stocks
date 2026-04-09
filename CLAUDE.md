@@ -1,52 +1,38 @@
 # semi-stocks
-  
-Investment research tracking AI infrastructure bottleneck rotation. Sources, thesis, and positioning data live in `data/`. Check `TODO.md` at session start for current priorities.
 
-## Core Thesis
+Research repo tracking AI infrastructure bottleneck rotation. Start each session at `TODO.md`. Treat `README.md` as the landing page and use the docs below for canonical detail.
 
-AI compute demand is systematically underestimated. Bottlenecks shift in sequence — the trade is identifying the next one before consensus. See `data/thesis.yaml` for current cascade status.
+## Repo Map
 
-## Key Concepts
+- `data/thesis.yaml` - bottleneck control plane, next earnings dates, ticker map
+- `data/research/earnings-pipeline.md` - canonical ingest and promotion path
+- `data/research/13f-pipeline-design.md` - 13F automation direction
+- `wiki/schema.md` - wiki rules and bookkeeping
+- `wiki/concepts/bottleneck-cascade.md` - thesis overview
+- `wiki/concepts/source-triangulation.md` - how SemiAnalysis, Leopold, and Baker fit together
+- `agents/` - sidecar lane; non-authoritative until human review promotes changes
 
-- **Bottleneck cascade:** Constraints shift in sequence (CoWoS → power → memory → N3 logic → EUV tools). The money is in identifying the *next* one.
-- **X minus 1:** Everyone in the supply chain builds one step below what's actually needed. The gap = the trade.
-- **Demand destruction:** AI memory demand is crowding out consumer devices. DRAM price 3-4x → smartphone volumes halving → more DRAM freed for AI.
-- **13F lag:** Filings are 45 days stale. Use SemiAnalysis data to infer what positions *should* look like next quarter.
-
-## Key Files
-
-| File | What's there |
-|---|---|
-| `README.md` | Full thesis prose, source descriptions (Leopold/Baker/SemiAnalysis), divergence table, actionable framework |
-| `data/thesis.yaml` | Cascade status, ticker-to-bottleneck map, signals |
-| `data/sources/{leopold,baker}/` | 13F positioning YAML (quarterly) |
-| `data/sources/semianalysis/` | Curated supply chain signals |
-| `data/companies/<TICKER>/` | Earnings analysis, forward claims, thesis signals (deep-dive names only) |
-| `data/research/earnings-pipeline.md` | Full ingestion process docs (earnings + 13F funnels, query traversal) |
-| `data/research/13f-pipeline-design.md` | 13F automation design |
-| `wiki/` | Semi-stocks wiki. Read `wiki/schema.md` before any wiki op. Update `wiki/index.md` and `wiki/log.md` after changes. |
-| `config.yaml` | Source URLs, CIKs |
-| `src/synthesis.py` | Agreement map, divergences, cascade status |
-| `src/report.py` | HTML report generator |
-
-## Session Rules
-
-<important if="analyzing a new 13F filing or position change">
-Read `data/research/earnings-pipeline.md` § "13F funnel" for the full process. Route through wiki. Compare QoQ. Flag when Leopold and Baker move opposite directions on same name — that's a thesis divergence signal.
+<important if="you need orientation before acting">
+Read in order: `TODO.md`, `data/thesis.yaml`, `wiki/concepts/bottleneck-cascade.md`, `wiki/concepts/source-triangulation.md`, and `data/research/earnings-pipeline.md`.
 </important>
 
-<important if="ingesting earnings or a transcript">
-Read `data/research/earnings-pipeline.md` for the full process. Route through wiki funnel: `wiki/raw/` → `wiki/sources/` → `data/companies/`. Score prior `forward_claims` before ingesting new quarter. Deep-dive list: CRWV, NVDA, MU, COHR, INTC, TSM, LITE.
+<important if="writing or updating canonical research">
+Truth path: `wiki/raw/` -> `wiki/sources/` or `wiki/concepts/` -> `data/companies/` or `data/sources/` -> `data/thesis.yaml` -> reports.
+`data/` is the final authority when prose and structure differ. Do not create a new hand-maintained truth lane.
 </important>
 
-<important if="evaluating a stock in this context">
-Frame analysis around: (1) which bottleneck does this company sit on, (2) is that bottleneck currently binding or next-in-line, (3) is the position held by Leopold, Baker, or both, (4) what does SemiAnalysis data say about the supply/demand for this company's product, (5) check `data/companies/` for earnings history and open forward claims.
+<important if="ingesting earnings or transcripts">
+Follow `data/research/earnings-pipeline.md`. Score prior `forward_claims` first. Deep-dive names: CRWV, NVDA, MU, COHR, INTC, TSM, LITE.
 </important>
 
-<important if="researching supply chain data">
-Use parallel subagents to pull: SemiAnalysis newsletter (public posts), WhaleWisdom 13F data, recent earnings transcripts for the relevant company. Synthesize after all return.
+<important if="ingesting or analyzing a 13F">
+Cross-check against SEC EDGAR and at least two aggregators before promotion. Divergence between Leopold and Baker is a thesis signal, not noise.
 </important>
 
-<important if="user asks about a specific sector">
-Map it to the bottleneck cascade. Provide: current constraint status, key companies, who holds what (Leopold vs Baker), and SemiAnalysis signal if available.
+<important if="editing wiki pages">
+Read `wiki/schema.md` first. Update `wiki/index.md` and `wiki/log.md` when adding or materially changing wiki pages.
+</important>
+
+<important if="working under agents/">
+Read `agents/CLAUDE.md`. Agents may read the full repo but may write only under `agents/`. Agent output stays non-canonical until human review promotes it.
 </important>
