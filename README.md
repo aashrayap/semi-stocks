@@ -101,64 +101,157 @@ DIMENSION 2: WHEN IN THE CYCLE (Baker framework)
 
 See `wiki/outputs/baker-cyclicality-thesis.md` for the full evidence base (6 subsectors, P/E data, lead times).
 
-## Research Pipeline
+## Repo Architecture
 
-Research flows through a layered funnel — wide at ingest, narrow at thesis.
+There are two distinct processes in this repo:
 
-```
-wiki/raw/              → wiki/sources/           → data/companies/        → data/thesis.yaml
-(transcripts, filings)   (synthesized pages)       (structured YAML)        (cascade updates)
-~20 companies            ~12-15 companies          ~5-8 companies           only when status shifts
-```
-
-- **wiki/raw/** — Immutable source material. Full earnings transcripts, SEC filings, articles. Cheap to store.
-- **wiki/sources/** — Synthesized knowledge pages. Key metrics, guidance claims, notable quotes, wikilinks to concepts. Self-contained for most queries.
-- **data/companies/** — Structured analysis for high-conviction names. Quarterly YAML with financials, forward claims (verifiable with `status: pending|confirmed|missed`), thesis signals, fund positioning cross-reference.
-- **data/thesis.yaml** — Cascade status. Updated only when earnings data actually shifts a bottleneck.
-
-See `wiki/schema.md` for wiki conventions and `CLAUDE.md` for the full earnings pipeline process.
-
-## Architecture Lanes
-
-The repo has two lanes with different authority:
+1. **Canonical manual/wiki pipeline** — the authoritative path for research facts and thesis state
+2. **Agent sidecar pipeline** — a parallel, non-authoritative path for alerts, predictions, drafts, and experiments
 
 ```
-CANONICAL TRUTH LANE (stable, authoritative)
+WIDE EVIDENCE
 
-external sources
+earnings releases / transcripts / 13Fs / articles / daily notes / calendars
+  -> wiki/raw/                    canonical raw evidence (local-first, gitignored)
+  -> agents/drafts/earnings/     agent staging only, not canonical
+
+MID SYNTHESIS
+
+wiki/sources/*.md                per-event synthesis
+wiki/concepts/*.md               cross-cutting thesis/context pages
+wiki/outputs/*.md                filed analysis outputs
+
+STRUCTURED TRUTH
+
+data/sources/*/*.yaml            structured source snapshots
+data/companies/<TICKER>/q*.yaml  structured company quarters
+data/thesis.yaml                 thesis control plane
+
+DERIVED VIEWS
+
+src/synthesis.py + src/report.py -> reports/latest.html
+agents/src/*                     -> agent reports / predictions / backtests
+```
+
+## Canonical Manual / Wiki Pipeline
+
+This is the path that should be treated as truth.
+
+```
+CANONICAL PIPELINE (authoritative)
+
+Earnings / transcripts / releases / 13Fs / articles
   -> wiki/raw/
-  -> wiki/sources/
-  -> data/companies/ + data/sources/
+     raw evidence only; immutable after capture
+
+  -> wiki/sources/<event>.md
+     human-readable synthesis of one earnings event, filing, or source
+
+  -> wiki/concepts/<topic>.md
+     optional cross-cutting concept updates when the new evidence changes the graph
+
+  -> data/companies/<TICKER>/q*.yaml    for earnings/company facts
+  -> data/sources/<SOURCE>/q*.yaml      for fund/source positioning facts
+
   -> data/thesis.yaml
-  -> src/synthesis.py + src/report.py
-  -> canonical research output
+     only when structured evidence changes bottleneck state, dates, or ticker map
 
-trust increases and scope narrows as data moves right
+  -> src/synthesis.py
+  -> src/report.py
+  -> reports/latest.html
+```
+
+### Canonical Layer Responsibilities
+
+| Layer | Role | Authority |
+|---|---|---|
+| `wiki/raw/` | Raw upstream evidence: transcripts, releases, filing bundles, article captures | Evidence only |
+| `wiki/sources/` | Event-level synthesis for humans | Interpretive, but should cite raw |
+| `wiki/concepts/` | Cross-cutting compiled knowledge | Interpretive, thesis-linked |
+| `data/companies/` | Canonical structured company facts by quarter | Authoritative for company data |
+| `data/sources/` | Canonical structured source/fund snapshots | Authoritative for source data |
+| `data/thesis.yaml` | Bottleneck control plane | Authoritative thesis state |
+| `src/report.py` | Derived presentation | Not a source of new facts |
+
+### Canonical Subflows
+
+```
+EARNINGS SUBFLOW
+
+wiki/raw/<ticker>-<quarter>-*.md
+  -> wiki/sources/<ticker>-<quarter>.md
+  -> data/companies/<TICKER>/q*.yaml
+  -> optional thesis.yaml update
 ```
 
 ```
-AGENT SIDECAR LANE (fast iteration, non-authoritative)
+13F / SOURCE SUBFLOW
 
-reads wiki/* + data/* + data/thesis.yaml
-  -> agents/src/*
-  -> agents/state/* + agents/reports/* + agents/drafts/* + agents/logs/*
-  -> agents/autoagent/* backtests and experiments
-
-agents can read the full repo but only write under agents/
+wiki/raw/<fund>-<quarter>-13f.md
+  -> wiki/sources/<fund>-<quarter>.md
+  -> data/sources/<fund>/q*.yaml
+  -> optional thesis.yaml update
 ```
 
 ```
-HUMAN PROMOTION GATE (the only bridge back)
+CONCEPT SUBFLOW
 
-agents output
+new source/company evidence
+  -> wiki/concepts/<topic>.md refresh
+  -> no thesis.yaml change unless structured evidence changed state
+```
+
+## Agent Sidecar Pipeline
+
+This lane exists to move faster, test automation, and generate learning signals without mutating canonical truth directly.
+
+```
+AGENT SIDECAR (non-authoritative)
+
+reads wiki/raw when available + wiki/* + data/* + data/thesis.yaml
+  -> agents/src/transcript_fetcher.py
+     writes transcript drafts to agents/drafts/earnings/
+
+  -> agents/src/earnings_calendar.py
+     writes agents/reports/earnings-alert-YYYY-MM-DD.md
+
+  -> agents/src/pre_earnings_predictor.py
+     writes agents/state/predictions/<TICKER>-<quarter>.yaml
+
+  -> agents/src/post_earnings_scorer.py
+     writes agents/reports/scorecard-<TICKER>-<quarter>.md
+
+  -> agents/src/report.py
+     writes agents/reports/latest.html
+
+  -> agents/autoagent/backtest.py
+     writes agents/autoagent/experiments/*
+
+  -> ad hoc daily briefings
+     writes agents/reports/daily-YYYY-MM-DD.md
+```
+
+- Agents may read the full repo.
+- Agents should write only under `agents/`.
+- Agent outputs are proposals, comparisons, or scoring artifacts, not canonical truth.
+- `agents/config.yaml` currently advertises a weekly `thirteenf_monitor` and daily `signal_scanner`, but those scripts do not exist yet.
+
+## Promotion Gate
+
+The only way information should move from the agent lane back into the canonical lane is through explicit human review.
+
+```
+AGENT OUTPUT / LOCAL RESEARCH
   -> human review
-  -> optional promotion into wiki/ or data/
-  -> thesis/report updates only after human acceptance
+  -> if worth keeping:
+     raw evidence      -> wiki/raw/
+     event synthesis   -> wiki/sources/
+     concept updates   -> wiki/concepts/
+     structured facts  -> data/companies/ or data/sources/
+     thesis state      -> data/thesis.yaml
 ```
 
-- **Stable:** the truth lane, the write boundary, and `data/thesis.yaml` as the control plane.
-- **Less stable:** agent templates, backtest task coverage, and evaluation logic inside `agents/`.
-- **Key principle:** agents improve speed, repeatability, and falsifiability without becoming a second source of truth.
+Rule: agents can propose; the canonical lane decides.
 
 ## Alignment Contract
 
@@ -197,9 +290,87 @@ Ownership is explicit:
 
 If the same fact appears in both wiki prose and structured data, `data/` wins. Wiki explains the thesis; `data/` remembers what is true.
 
-## Data Refresh Cadence
+## Raw Layer Notes
 
-- **13F filings:** Quarterly (45 days after quarter end). Next: ~May 15, 2026
-- **SemiAnalysis:** Continuous newsletter + paid data products
-- **Earnings calls:** Track ASML, TSM, SK Hynix, MU for supply chain signals; see CLAUDE.md § Earnings Pipeline
+`wiki/raw/` is still the intended first stage of the canonical pipeline.
+
+- It was **not** replaced by new terminology.
+- It is **local-first and gitignored** because raw transcripts/filings can be large, regeneratable, or copyright-sensitive.
+- A fresh checkout may have an empty or missing `wiki/raw/` directory until local ingest happens. That does not mean the architectural layer is gone.
+- `agents/drafts/earnings/` is **not** a rename of `wiki/raw/`; it is an agent staging area.
+- If a source page in `wiki/sources/` points to `raw/...`, that is still the intended canonical upstream evidence link.
+
+## Current Operating Cadence
+
+The live repo has both manual and agentic cadence, but only some of it is automated today.
+
+| Cadence | Canonical manual/wiki path | Agent sidecar path |
+|---|---|---|
+| Morning / daily | Review news, daily notes, and decide what is worth ingesting into `wiki/raw/` / `wiki/sources/` | Daily briefings in `agents/reports/daily-*.md`; `agents/src/earnings_calendar.py` is the clearest implemented daily script |
+| Weekly | Manual review of new 13Fs, source changes, open research gaps, and thesis drift | Intended weekly 13F monitor in config, but not implemented yet |
+| Monthly | Manual cascade review, deep-dive backlog pruning, and thesis-control-plane cleanup | No implemented monthly agent review yet |
+| Pre-earnings | Canonical prep: read prior raw/source/company material and score prior claims | `agents/src/pre_earnings_predictor.py` generates testable claims ~7 days before earnings |
+| Post-earnings | Canonical raw -> source -> company update, then thesis update if needed | `agents/src/post_earnings_scorer.py` scores predictions and writes scorecards |
+| Quarterly | Canonical 13F ingest and fund-positioning refresh | Backtests and predictor tuning can run in parallel via AutoAgent |
+
+## Next Bottleneck: Narrowing
+
+The next bottleneck is not more ingestion. It is better compression between the canonical data layers and the report surfaces.
+
+```
+PROPOSED COMPUTED MIDDLE LAYER
+
+wiki/sources/*.md + data/companies/* + data/sources/* + data/thesis.yaml
+  -> normalization adapters
+     revenue | gross margin | EPS | cash flow | capex | guide | thesis signals | positioning
+
+  -> derived metrics
+     guide delta | margin acceleration | capex intensity | balance-sheet stress
+     forward-claim status | thesis confirmation / weakening
+
+  -> insight ranking
+     what changed since last run
+     which bottleneck got stronger / weaker
+     which ticker has the most important new evidence
+     which catalyst matters in the next 7-14 days
+
+  -> report surfaces
+     reports/latest.html
+     agents/reports/earnings-alert-*.md
+     future catalyst-first alerts
+```
+
+- **Normalization layer:** one adapter per tracked company so CRWV, NVDA, MU, TSM, INTC, COHR, and LITE expose the same comparison surface.
+- **Derived-metrics layer:** computed signals the report actually reasons on, instead of every surface reparsing quarter YAML independently.
+- **Insight layer:** ranking and compression, not storage.
+- **Backfill requirement:** one more prior quarter for core names where the comparison materially sharpens the signal.
+- **Anti-bloat rule:** do not create a third hand-maintained truth lane. This layer should be computed from canonical inputs.
+
+## Proposed Reflection Cadence
+
+Once the narrowing layer exists, the morning / weekly / monthly process can sit on top of it without bloating the repo.
+
+```
+PROPOSED CADENCE LAYER
+
+daily briefing + earnings alert + insight ranking + thesis context
+  -> agents/reports/reflections/daily-YYYY-MM-DD.md
+
+5-7 daily reflections
+  -> agents/reports/reflections/weekly-YYYY-MM-DD.md
+
+4-5 weekly reflections + due claims + upcoming quarter schedule
+  -> agents/reports/reflections/monthly-YYYY-MM-DD.md
+
+weekly / monthly proposals
+  -> human review
+  -> promote only accepted changes into wiki/raw, wiki/sources, wiki/concepts,
+     data/companies, data/sources, or data/thesis.yaml
+```
+
+## Source Cadence
+
+- **13F filings:** quarterly, typically mid-February / mid-May / mid-August / mid-November
+- **SemiAnalysis:** continuous manual curation into `data/sources/semianalysis/signals.yaml`
+- **Earnings calls:** event-driven funnel through `wiki/raw/`, `wiki/sources/`, `data/companies/`, and sometimes `data/thesis.yaml`
  
