@@ -1,0 +1,118 @@
+ticker: MU
+company: Micron Technology, Inc.
+quarter: Q2 FY2026
+period: "2026-02-26"
+earnings_date: "2026-03-18"
+
+financials:
+  q2:
+    revenue: 23_860_000_000
+    revenue_qoq: "+74.9%"
+    revenue_yoy: "+196.3%"
+    gross_margin_gaap: 0.744
+    gross_margin_non_gaap: 0.749
+    operating_income_gaap: 16_135_000_000
+    operating_margin_gaap: 0.676
+    operating_income_non_gaap: 16_455_000_000
+    operating_margin_non_gaap: 0.690
+    net_income_gaap: 13_785_000_000
+    net_income_non_gaap: 14_021_000_000
+    eps_gaap: 12.07
+    eps_non_gaap: 12.20
+    operating_cash_flow: 11_900_000_000
+    capex_net: 5_000_000_000
+    adjusted_free_cash_flow: 6_900_000_000
+
+  balance_sheet:
+    cash_and_equivalents: 13_908_000_000
+    short_term_investments: 681_000_000
+    long_term_marketable_investments: 2_038_000_000
+    total_cash_marketable_and_restricted: 16_700_000_000
+    receivables: 17_314_000_000
+    inventories: 8_267_000_000
+    property_plant_and_equipment: 51_408_000_000
+    total_current_assets: 41_413_000_000
+
+  business_units:
+    cloud_memory_revenue: 7_749_000_000
+    core_data_center_revenue: 5_687_000_000
+    mobile_and_client_revenue: 7_711_000_000
+    automotive_and_embedded_revenue: 2_708_000_000
+
+guidance:
+  q3_fy2026:
+    revenue: [32_750_000_000, 34_250_000_000]
+    gross_margin_gaap: 0.81
+    gross_margin_non_gaap: 0.81
+    operating_expenses_gaap: 1_600_000_000
+    operating_expenses_non_gaap: 1_400_000_000
+    eps_gaap: [18.50, 19.30]
+    eps_non_gaap: [18.75, 19.55]
+    notes: "Company guided to $33.5B +/- $750M of revenue and approximately 81% gross margin."
+
+forward_claims:
+  - claim: "Q3 FY2026 revenue will be $33.5B +/- $750M"
+    speaker: "Management guidance"
+    source: "Q2 FY2026 earnings release"
+    verify_at: "Q3 FY2026 earnings"
+    status: pending
+
+  - claim: "Q3 FY2026 gross margin will be approximately 81%"
+    speaker: "Management guidance"
+    source: "Q2 FY2026 earnings release"
+    verify_at: "Q3 FY2026 earnings"
+    status: pending
+
+  - claim: "Q3 FY2026 non-GAAP diluted EPS will be $19.15 +/- $0.40"
+    speaker: "Management guidance"
+    source: "Q2 FY2026 earnings release"
+    verify_at: "Q3 FY2026 earnings"
+    status: pending
+
+  - claim: "Memory has become a strategic asset for customers in the AI era"
+    speaker: "CEO Sanjay Mehrotra"
+    source: "Q2 FY2026 earnings release"
+    verify_at: "FY2026 demand and pricing trajectory"
+    status: pending
+    notes: "Not a point forecast, but a thesis-level statement that shortage conditions remain durable."
+
+  - claim: "Micron is investing in its global manufacturing footprint to support growing AI-era demand"
+    speaker: "Management"
+    source: "Q2 FY2026 earnings release"
+    verify_at: "Capex and capacity commentary through FY2026"
+    status: pending
+
+thesis_signals:
+  - bottleneck: memory
+    direction: confirms
+    evidence: >
+      Revenue reached $23.86B with 74.9% non-GAAP gross margin, and Micron guided Q3 to
+      $33.5B +/- $750M at about 81% gross margin. Management explicitly cited strong demand
+      and tight industry supply.
+
+positioning:
+  baker:
+    ticker: MU
+    value: 411_000_000
+    type: common_plus_put
+    conviction: high_but_hedged
+    thesis: "Memory shortage remains active, but classic peak-risk hedging is required."
+    notes: "$211M of common plus $200M of puts in Q4 2025."
+
+  leopold:
+    ticker: MU
+    value: 0
+    type: exited_put
+    conviction: none
+    thesis: "No active MU position in Q4 2025."
+    notes: "Prior quarter included $50M of puts; Q4 2025 removed the position."
+
+  divergence: >
+    Baker still owns the memory shortage but in a hedged form. Leopold is no longer expressing
+    an active MU view. That makes MU more of a cycle-timing disagreement than a pure direction
+    disagreement.
+
+notes:
+  - "Official source was Micron's Q2 FY2026 earnings release dated 2026-03-18."
+  - "Quarter is one of the strongest company-level confirmations of the memory-shortage thesis in the repo."
+

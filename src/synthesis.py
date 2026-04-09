@@ -9,6 +9,9 @@ from src.sources.fund_13f import Fund13FSource
 from src.sources.semianalysis import SemiAnalysisSource
 
 WIKI_DIR = Path(__file__).resolve().parent.parent / "wiki"
+WIKI_RAW_DIR = WIKI_DIR / "raw"
+WIKI_SOURCES_DIR = WIKI_DIR / "sources"
+WIKI_CONCEPTS_DIR = WIKI_DIR / "concepts"
 COMPANIES_DIR = DATA_DIR / "companies"
 
 # Map cascade stage names to concept page filenames
@@ -17,6 +20,22 @@ STAGE_TO_CONCEPT = {
     "N3 logic wafers": "n3-wafer-crunch",
     "Pluggable optics (scale-out)": "pluggable-optics",
     "Co-packaged optics / CPO (scale-up)": "co-packaged-optics",
+}
+
+# Deep-dive names expected to move through the full earnings funnel.
+DEEP_DIVE_TICKERS = {"CRWV", "NVDA", "MU", "COHR", "INTC", "TSM", "LITE"}
+
+# Map ticker-level bottlenecks to the concept pages that explain them.
+BOTTLENECK_TO_CONCEPT = {
+    "memory": "memory-supercycle",
+    "n3_logic": "n3-wafer-crunch",
+    "pluggable_optics": "pluggable-optics",
+    "cpo_next": "co-packaged-optics",
+    "gpu_cloud": "gpu-cloud",
+    "power": "power",
+    "copper_signal_integrity": "copper-signal-integrity",
+    "euv": "euv-tools",
+    "foundry": "foundry",
 }
 
 
@@ -33,6 +52,40 @@ def get_sources() -> tuple[Fund13FSource, Fund13FSource, SemiAnalysisSource]:
     baker = Fund13FSource("baker")
     semi = SemiAnalysisSource()
     return leopold, baker, semi
+
+
+def _load_frontmatter(path: Path) -> dict:
+    """Read YAML frontmatter from a markdown page."""
+    text = path.read_text()
+    match = re.match(r"^---\n(.*?)\n---\n", text, re.S)
+    if not match:
+        return {}
+    return yaml.safe_load(match.group(1)) or {}
+
+
+def _quarter_to_slug(quarter: str) -> str:
+    """Convert a quarter label like 'Q4 FY2026' into a filename slug."""
+    slug = re.sub(r"[^a-z0-9]+", "-", quarter.lower()).strip("-")
+    return re.sub(r"-{2,}", "-", slug)
+
+
+def _company_source_slug(company: dict) -> str:
+    """Return the expected wiki source slug for a company quarter."""
+    ticker = str(company.get("ticker", "")).lower().strip()
+    quarter = _quarter_to_slug(str(company.get("quarter", "")))
+    return f"{ticker}-{quarter}".strip("-")
+
+
+def _expected_company_yaml_from_source_slug(slug: str) -> str:
+    """Infer the expected company YAML path from an earnings source slug."""
+    ticker, _, quarter_slug = slug.partition("-")
+    quarter_part = quarter_slug.replace("-", "_")
+    return f"data/companies/{ticker.upper()}/{quarter_part}.yaml"
+
+
+def _expected_source_page_from_company(company: dict) -> str:
+    """Infer the expected wiki source page path from a company quarter."""
+    return f"wiki/sources/{_company_source_slug(company)}.md"
 
 
 def all_tickers() -> list[str]:
@@ -391,6 +444,117 @@ def concept_drift() -> list[dict]:
                     "detail": evidence[:120],
                 })
 
+    return findings
+
+
+def alignment_drift() -> list[dict]:
+    """Check raw/source/data/thesis alignment across the canonical truth lane."""
+    findings = []
+
+    if not WIKI_RAW_DIR.exists():
+        findings.append({
+            "type": "missing_directory",
+            "artifact": "wiki/raw/",
+            "detail": "Schema and earnings source pages reference wiki/raw/, but the directory is absent.",
+        })
+
+    # Every cited upstream source must resolve from the wiki root.
+    wiki_pages = sorted(WIKI_SOURCES_DIR.glob("*.md")) + sorted(WIKI_CONCEPTS_DIR.glob("*.md"))
+    for page in wiki_pages:
+        frontmatter = _load_frontmatter(page)
+        source_refs = frontmatter.get("sources", [])
+        if isinstance(source_refs, str):
+            source_refs = [source_refs]
+
+        for ref in source_refs:
+            target = (WIKI_DIR / str(ref)).resolve()
+            if not target.exists():
+                findings.append({
+                    "type": "missing_source_artifact",
+                    "artifact": str(ref),
+                    "path": str(page.relative_to(WIKI_DIR.parent)),
+                    "detail": f"{page.relative_to(WIKI_DIR.parent)} cites a missing upstream source.",
+                })
+
+    companies = _load_company_yamls()
+    company_by_slug = {
+        _company_source_slug(company): company
+        for company in companies
+        if company.get("ticker") and company.get("quarter")
+    }
+    structured_tickers = {company.get("ticker") for company in companies if company.get("ticker")}
+
+    earnings_source_pages = {}
+    for page in sorted(WIKI_SOURCES_DIR.glob("*.md")):
+        frontmatter = _load_frontmatter(page)
+        tags = {str(tag).lower() for tag in frontmatter.get("tags", [])}
+        if "earnings" in tags:
+            earnings_source_pages[page.stem] = page
+
+    # Every earnings source page should have a structured company twin.
+    for slug, page in earnings_source_pages.items():
+        if slug not in company_by_slug:
+            findings.append({
+                "type": "missing_company_yaml",
+                "artifact": _expected_company_yaml_from_source_slug(slug),
+                "path": str(page.relative_to(WIKI_DIR.parent)),
+                "detail": "Earnings source page exists without a matching data/companies/ YAML.",
+            })
+
+    # Every structured company quarter should have a wiki source twin.
+    for slug, company in company_by_slug.items():
+        if slug not in earnings_source_pages:
+            findings.append({
+                "type": "missing_source_page",
+                "ticker": company.get("ticker"),
+                "artifact": _expected_source_page_from_company(company),
+                "detail": "Structured company YAML exists without a matching wiki/sources/ earnings page.",
+            })
+
+    # Deep-dive tickers are expected to move through the full earnings funnel.
+    thesis = load_thesis()
+    ticker_map = thesis.get("ticker_map", {})
+    for ticker in sorted(DEEP_DIVE_TICKERS):
+        if ticker in structured_tickers:
+            continue
+        meta = ticker_map.get(ticker, {})
+        findings.append({
+            "type": "deep_dive_missing_company_data",
+            "ticker": ticker,
+            "stage": meta.get("bottleneck", ""),
+            "artifact": f"data/companies/{ticker}/",
+            "detail": "Deep-dive ticker is missing structured company coverage.",
+        })
+
+    # Ticker-level bottlenecks should have an explainer page somewhere in concepts/.
+    for bottleneck, concept_slug in sorted(BOTTLENECK_TO_CONCEPT.items()):
+        related_tickers = sorted(
+            ticker
+            for ticker, meta in ticker_map.items()
+            if meta.get("bottleneck") == bottleneck or meta.get("also") == bottleneck
+        )
+        if not related_tickers:
+            continue
+
+        concept_path = WIKI_CONCEPTS_DIR / f"{concept_slug}.md"
+        if not concept_path.exists():
+            findings.append({
+                "type": "missing_bottleneck_concept",
+                "stage": bottleneck,
+                "artifact": f"wiki/concepts/{concept_slug}.md",
+                "detail": f"No concept page covers bottleneck '{bottleneck}' for {', '.join(related_tickers)}.",
+            })
+
+    findings.extend(concept_drift())
+    findings.sort(
+        key=lambda finding: (
+            finding.get("type", ""),
+            finding.get("stage", ""),
+            finding.get("ticker", ""),
+            finding.get("artifact", ""),
+            finding.get("detail", ""),
+        )
+    )
     return findings
 
 

@@ -1,4 +1,4 @@
-updated: "2026-04-07"
+updated: "2026-04-08"
 
 # Baker cycle framework — applied to each cascade stage
 # cycle_phase: resolved | post_peak | peak_shortage | mid_shortage | early_cycle | pre_cycle
@@ -123,17 +123,17 @@ cascade:
 # Ticker-to-bottleneck mapping (for synthesis lookups)
 ticker_map:
   COHR:  { bottleneck: pluggable_optics, status: active, also: cpo_next, next_earnings: "2026-05-07" }
-  LITE:  { bottleneck: pluggable_optics, status: active, also: cpo_next, next_earnings: "2026-05-06" }
+  LITE:  { bottleneck: pluggable_optics, status: active, also: cpo_next, next_earnings: "2026-05-05" }
   CIEN:  { bottleneck: pluggable_optics, status: active, next_earnings: "2026-06-04" }
   ALAB:  { bottleneck: copper_signal_integrity, status: active, also: cpo_next, next_earnings: "2026-05-06" }
   SMTC:  { bottleneck: copper_signal_integrity, status: active, also: cpo_next, next_earnings: "2026-06-04" }
   MU:    { bottleneck: memory, status: active, next_earnings: "2026-06-25" }
   SNDK:  { bottleneck: memory, status: active, next_earnings: "2026-05-01" }
-  TSM:   { bottleneck: n3_logic, status: active, next_earnings: "2026-04-17" }
+  TSM:   { bottleneck: n3_logic, status: active, next_earnings: "2026-04-16" }
   NVDA:  { bottleneck: n3_logic, status: active, next_earnings: "2026-05-28" }
   AVGO:  { bottleneck: n3_logic, status: active, next_earnings: "2026-06-12" }
-  INTC:  { bottleneck: n3_logic, status: active, next_earnings: "2026-04-24" }
-  ASML:  { bottleneck: euv, status: next, next_earnings: "2026-04-16" }
+  INTC:  { bottleneck: n3_logic, status: active, next_earnings: "2026-04-23" }
+  ASML:  { bottleneck: euv, status: next, next_earnings: "2026-04-15" }
   CRWV:  { bottleneck: gpu_cloud, status: active, next_earnings: "2026-05-12" }
   BE:    { bottleneck: power, status: played_out, next_earnings: "2026-05-08" }
   CORZ:  { bottleneck: power, status: played_out, next_earnings: "2026-05-08" }

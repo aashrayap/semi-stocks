@@ -1,0 +1,126 @@
+ticker: TSM
+company: Taiwan Semiconductor Manufacturing Company Limited
+quarter: Q4 2025
+period: "2025-12-31"
+earnings_date: "2026-01-15"
+
+financials:
+  q4:
+    revenue_ntd: 1_046_090_000_000
+    revenue_usd: 33_730_000_000
+    revenue_qoq: "+5.7%"
+    revenue_yoy: "+20.5%"
+    gross_margin: 0.623
+    operating_margin: 0.540
+    net_profit_margin: 0.483
+    net_income_ntd: 505_740_000_000
+    eps_twd: 19.50
+    eps_adr_usd: 3.14
+    operating_cash_flow_ntd: 726_000_000_000
+    capex_usd: 11_500_000_000
+
+  full_year:
+    revenue_usd: 122_000_000_000
+    revenue_yoy: "+35.9%"
+    gross_margin: 0.599
+    operating_margin: 0.508
+    eps_twd: 66.25
+    operating_cash_flow_ntd: 2_300_000_000_000
+    capex_usd: 40_900_000_000
+    free_cash_flow_ntd: 1_000_000_000_000
+
+  balance_sheet:
+    cash_and_marketable_securities_usd: 98_000_000_000
+
+  technology_mix:
+    n3_wafer_revenue_pct: 0.28
+    n5_wafer_revenue_pct: 0.35
+    n7_wafer_revenue_pct: 0.14
+    advanced_wafer_revenue_pct: 0.77
+
+  platform_mix:
+    hpc_revenue_pct: 0.55
+    smartphone_revenue_pct: 0.32
+    iot_revenue_pct: 0.05
+    automotive_revenue_pct: 0.05
+    dce_revenue_pct: 0.01
+
+guidance:
+  q1_2026:
+    revenue_usd: [34_600_000_000, 35_800_000_000]
+    gross_margin: [0.63, 0.65]
+    operating_margin: [0.54, 0.56]
+
+  fy_2026:
+    capex_usd: [52_000_000_000, 56_000_000_000]
+    revenue_growth_usd: "close to 30%"
+
+forward_claims:
+  - claim: "Q1 2026 revenue will be between $34.6B and $35.8B"
+    speaker: "Management guidance"
+    source: "Q4 2025 earnings release"
+    verify_at: "Q1 2026 earnings"
+    status: pending
+
+  - claim: "Q1 2026 gross margin will be between 63% and 65%"
+    speaker: "Management guidance"
+    source: "Q4 2025 earnings release"
+    verify_at: "Q1 2026 earnings"
+    status: pending
+
+  - claim: "2026 capital budget will be between $52B and $56B"
+    speaker: "Management guidance"
+    source: "Q4 2025 earnings release"
+    verify_at: "FY2026 capex and capacity updates"
+    status: pending
+
+  - claim: "2026 revenue will grow by close to 30% in U.S. dollar terms"
+    speaker: "CEO C.C. Wei"
+    source: "Q4 2025 earnings call"
+    verify_at: "FY2026 earnings"
+    status: pending
+
+  - claim: "TSMC's wafer supply remains the bottleneck, not power"
+    speaker: "CEO C.C. Wei"
+    source: "Q4 2025 earnings call"
+    verify_at: "2026 capacity commentary"
+    status: pending
+
+thesis_signals:
+  - bottleneck: n3_logic
+    direction: confirms
+    evidence: >
+      Q4 revenue reached $33.73B, 3nm already represented 28% of wafer revenue, and advanced
+      nodes reached 77%. TSMC then guided Q1 to $34.6B-$35.8B, showing leading-edge demand
+      still outrunning supply.
+
+  - bottleneck: foundry
+    direction: confirms
+    evidence: >
+      TSMC raised its 2026 capital budget to $52B-$56B and is still converting capacity across
+      nodes to support demand. The supply response required is enormous even before any surplus exists.
+
+positioning:
+  baker:
+    ticker: TSM
+    value: 0
+    type: none
+    conviction: none
+    thesis: "No direct TSM exposure in Q4 2025."
+
+  leopold:
+    ticker: TSM
+    value: 0
+    type: none
+    conviction: none
+    thesis: "No active TSM position in Q4 2025."
+    notes: "Prior quarter included $75M of puts."
+
+  divergence: >
+    Neither fund is using TSM directly even though it is the central manufacturing choke point.
+    Both prefer downstream or alternative expressions of the bottleneck.
+
+notes:
+  - "Official sources were TSMC's Q4 2025 earnings release and earnings call transcript dated 2026-01-15."
+  - "Quarter is the repo's cleanest direct proof that the leading-edge wafer shortage remains active."
+

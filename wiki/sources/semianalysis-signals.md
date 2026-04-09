@@ -41,4 +41,4 @@ Jensen Huang cited SemiAnalysis at GTC26 as doing analysis "right" — normalizi
 
 COHR, LITE, CIEN (optics), MU, SNDK (memory), TSM, NVDA (N3), ASML (EUV)
 
-See also: [[concepts/bottleneck-cascade]], [[concepts/memory-supercycle]], [[concepts/n3-wafer-crunch]]
+See also: [[concepts/bottleneck-cascade]], [[concepts/memory-supercycle]], [[concepts/n3-wafer-crunch]], [[concepts/pluggable-optics]], [[concepts/euv-tools]]

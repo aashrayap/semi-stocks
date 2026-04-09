@@ -3,7 +3,7 @@ title: Bottleneck Cascade
 tags: [thesis, bottleneck, supply-chain, rotation]
 sources: [../data/thesis.yaml]
 created: 2026-04-07
-updated: 2026-04-07
+updated: 2026-04-08
 ---
 
 # Bottleneck Cascade
@@ -15,12 +15,12 @@ The core thesis: AI compute demand is chronically underestimated. Every supplier
 | Stage | Period | Status | Key Tickers |
 |-------|--------|--------|-------------|
 | CoWoS packaging | 2023 | Played out | ASX, AMAT |
-| Power / DC buildout | 2024 | Played out | VST, CEG, TLN, VRT |
+| [[concepts/power]] | 2024 | Played out | VST, CEG, TLN, VRT |
 | [[concepts/memory-supercycle]] | 2025-2026 | Active | MU, SNDK |
 | [[concepts/n3-wafer-crunch]] | 2025-2027 | Active | TSM, NVDA, AVGO, INTC |
 | [[concepts/pluggable-optics]] | 2025-2027 | Active | COHR, LITE, CIEN |
 | [[concepts/co-packaged-optics]] | 2028-2030 | Next | COHR, LITE, CIEN, ALAB, SMTC |
-| EUV tools | 2028-2030 | Next | ASML |
+| [[concepts/euv-tools]] | 2028-2030 | Next | ASML |
 
 ## Meta-Principle
 
@@ -35,4 +35,6 @@ Leopold and Baker agree on the cascade's existence but disagree on which stage i
 
 Originally these were expected to be sequential. SemiAnalysis data shows memory, N3, and optics are all binding simultaneously.
 
-See also: [[sources/leopold-q4-2025]], [[sources/baker-q4-2025]], [[sources/semianalysis-signals]], [[concepts/token-economics]]
+[[concepts/gpu-cloud]] is the downstream deployment layer where these upstream constraints turn into booked revenue and visible customer urgency.
+
+See also: [[sources/leopold-q4-2025]], [[sources/baker-q4-2025]], [[sources/semianalysis-signals]], [[concepts/token-economics]], [[concepts/gpu-cloud]]

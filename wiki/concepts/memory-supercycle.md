@@ -3,7 +3,7 @@ title: Memory Supercycle
 tags: [memory, hbm, dram, bottleneck]
 sources: [../data/thesis.yaml, ../data/sources/semianalysis/signals.yaml]
 created: 2026-04-07
-updated: 2026-04-07
+updated: 2026-04-08
 ---
 
 # Memory Supercycle
@@ -38,5 +38,8 @@ AI is consuming so much memory that there isn't enough left for phones, PCs, and
 
 - **CRWV Q4 2025:** Every GPU CRWV deploys needs HBM. $30-35B capex = substantial HBM demand pull-through.
 - **NVDA Q4 FY2026:** $21.4B inventory (HBM stockpile). Every GPU shipped needs HBM — NVIDIA GPU volumes are the primary demand driver.
+- **MU Q2 FY2026:** Revenue reached $23.86B, non-GAAP gross margin hit 74.9%, and Q3 guidance moved to $33.5B +/- $750M at roughly 81% gross margin. Management explicitly cited strong demand and tight industry supply.
 
-See also: [[concepts/bottleneck-cascade]], [[concepts/n3-wafer-crunch]], [[sources/crwv-q4-2025]], [[sources/nvda-q4-fy2026]]
+That Micron print matters because it turns the memory thesis from channel checks and third-party signals into direct company evidence. Baker's long-plus-put posture now reads like peak-shortage positioning, not doubt that the shortage exists.
+
+See also: [[concepts/bottleneck-cascade]], [[concepts/n3-wafer-crunch]], [[sources/crwv-q4-2025]], [[sources/nvda-q4-fy2026]], [[sources/mu-q2-fy2026]]

@@ -5,7 +5,7 @@ Restructured: 5 sections (from original 9).
 2. Cascade + Cycle Risk (merged cascade, explainers, cycle assessment)
 3. Positions + Signals (merged agreement map, divergences inline)
 4. Earnings Dashboard (merged forward claims, earnings signals, SemiAnalysis)
-5. Drift (collapsed footer)
+5. Alignment warnings (collapsed footer)
 """
 
 import json
@@ -15,9 +15,9 @@ from pathlib import Path
 from src.synthesis import (
     BOTTLENECK_ONE_LINERS,
     agreement_map,
+    alignment_drift,
     baker_hedge_ratio,
     cascade_status,
-    concept_drift,
     cycle_assessment,
     divergences,
     earnings_dashboard,
@@ -266,22 +266,22 @@ def generate_html() -> str:
             <td class="small">{semi_summary}</td>
         </tr>"""
 
-    # ── SECTION 5: DRIFT (collapsed) ──
-    drift = concept_drift()
+    # ── SECTION 5: ALIGNMENT WARNINGS (collapsed) ──
+    drift = alignment_drift()
     drift_count = len(drift)
     drift_rows = ""
     for d in drift:
         dtype = d["type"].replace("_", " ").title()
         ticker = d.get("ticker", "")
         stage = d.get("stage", "")
-        concept = d.get("concept_page", "")
+        artifact = d.get("artifact") or d.get("concept_page", "")
         detail = d.get("detail", "")
         drift_rows += f"""
         <tr>
             <td>{dtype}</td>
             <td>{stage}</td>
             <td>{ticker}</td>
-            <td>{concept}</td>
+            <td>{artifact}</td>
             <td class="small">{detail[:120]}</td>
         </tr>"""
 
@@ -359,9 +359,9 @@ def generate_html() -> str:
 </div>'''}
 
 {"" if drift_count == 0 else f'''<details class="section">
-<summary>DRIFT WARNINGS ({drift_count} findings)</summary>
+<summary>ALIGNMENT WARNINGS ({drift_count} findings)</summary>
 <table>
-    <tr><th>Type</th><th>Stage</th><th>Ticker</th><th>Concept Page</th><th>Detail</th></tr>
+    <tr><th>Type</th><th>Stage</th><th>Ticker</th><th>Artifact</th><th>Detail</th></tr>
     {drift_rows}
 </table>
 </details>'''}

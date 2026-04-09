@@ -1,0 +1,102 @@
+ticker: LITE
+company: Lumentum Holdings Inc.
+quarter: Q2 FY2026
+period: "2025-12-27"
+earnings_date: "2026-02-03"
+
+financials:
+  q2:
+    revenue: 665_500_000
+    revenue_qoq: "+24.7%"
+    revenue_yoy: "+65.5%"
+    gross_margin_gaap: 0.361
+    gross_margin_non_gaap: 0.425
+    operating_margin_gaap: 0.097
+    operating_margin_non_gaap: 0.252
+    net_income_gaap: 78_200_000
+    net_income_non_gaap: 143_900_000
+    eps_gaap: 0.89
+    eps_non_gaap: 1.67
+
+  balance_sheet:
+    total_cash_and_short_term_investments: 1_155_300_000
+
+  revenue_mix:
+    components: 443_700_000
+    systems: 221_800_000
+
+guidance:
+  q3_fy2026:
+    revenue: [780_000_000, 830_000_000]
+    operating_margin_non_gaap: [0.30, 0.31]
+    eps_non_gaap: [2.15, 2.35]
+
+forward_claims:
+  - claim: "Q3 FY2026 revenue will be between $780M and $830M"
+    speaker: "Management guidance"
+    source: "Q2 FY2026 earnings release"
+    verify_at: "Q3 FY2026 earnings"
+    status: pending
+
+  - claim: "Q3 FY2026 non-GAAP operating margin will be between 30.0% and 31.0%"
+    speaker: "Management guidance"
+    source: "Q2 FY2026 earnings release"
+    verify_at: "Q3 FY2026 earnings"
+    status: pending
+
+  - claim: "Q3 FY2026 non-GAAP diluted EPS will be between $2.15 and $2.35"
+    speaker: "Management guidance"
+    source: "Q2 FY2026 earnings release"
+    verify_at: "Q3 FY2026 earnings"
+    status: pending
+
+  - claim: "OCS backlog is already well beyond $400M"
+    speaker: "CEO Michael Hurlston"
+    source: "Q2 FY2026 earnings release"
+    verify_at: "2026 backlog and shipment commentary"
+    status: pending
+
+  - claim: "Lumentum received an incremental multi-hundred-million-dollar CPO order deliverable in the first half of calendar 2027"
+    speaker: "CEO Michael Hurlston"
+    source: "Q2 FY2026 earnings release"
+    verify_at: "H1 2027 revenue and shipment commentary"
+    status: pending
+
+thesis_signals:
+  - bottleneck: pluggable_optics
+    direction: confirms
+    evidence: >
+      Revenue reached $665.5M, up 65.5% YoY, and management guided the next quarter to
+      $780M-$830M. OCS backlog was already well beyond $400M, showing current optical
+      demand is translating into booked revenue.
+
+  - bottleneck: cpo_next
+    direction: confirms
+    evidence: >
+      Lumentum disclosed an incremental multi-hundred-million-dollar CPO order deliverable in
+      the first half of calendar 2027. CPO remains next-cycle, but booked demand is starting to appear.
+
+positioning:
+  baker:
+    ticker: LITE
+    value: 141_000_000
+    type: common
+    conviction: medium
+    thesis: "Current optical revenue layer remains attractive, but sizing was trimmed."
+    notes: "Position was down 42% QoQ in Q4 2025."
+
+  leopold:
+    ticker: LITE
+    value: 479_000_000
+    type: common
+    conviction: high
+    thesis: "Optics is one of the cleanest downstream deployment beneficiaries."
+    notes: "Position was up 604% QoQ in Q4 2025."
+
+  divergence: >
+    Both funds are long LITE, so the disagreement is about size and timing rather than direction.
+    Leopold is materially more aggressive than Baker.
+
+notes:
+  - "Official source was Lumentum's Q2 FY2026 earnings release dated 2026-02-03."
+  - "Quarter confirms current optical demand and adds an early booked-demand datapoint for CPO."

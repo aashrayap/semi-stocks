@@ -160,6 +160,43 @@ agents output
 - **Less stable:** agent templates, backtest task coverage, and evaluation logic inside `agents/`.
 - **Key principle:** agents improve speed, repeatability, and falsifiability without becoming a second source of truth.
 
+## Alignment Contract
+
+The repo has one truth path. `wiki/` and `data/` are not peers; they are adjacent layers in the same promotion funnel.
+
+```
+external evidence
+  -> wiki/raw/                    immutable source artifact
+  -> wiki/sources/                human-readable synthesis
+  -> data/companies/ + data/sources/
+                                  canonical structured facts / claims / positions
+  -> data/thesis.yaml             control plane for bottlenecks, ticker map, dates
+  -> src/synthesis.py + src/report.py
+                                  derived views only
+```
+
+Enforcement lives at the handoffs, not inside ad hoc prose:
+
+| Transition | Contract | Enforcement |
+|---|---|---|
+| `external -> wiki/raw/` | Raw artifact exists and is immutable after ingest | Missing raw files are drift findings |
+| `wiki/raw/ -> wiki/sources/` | Source page must cite the raw or structured upstream artifact | Frontmatter `sources:` must resolve |
+| `wiki/sources/ -> data/companies/` | Deep-dive earnings pages get a structured twin | Parity check: source page <-> company YAML |
+| `data/companies/ -> data/thesis.yaml` | Thesis only changes when structured evidence changes status | Promotion gate: thesis updates are downstream-only |
+| `data/* -> synthesis/report` | Report renders canonical state, not new truth | Drift and dashboard surfaces read from `data/*` |
+
+Ownership is explicit:
+
+| Layer | Owns | Must not own |
+|---|---|---|
+| `wiki/raw/` | source artifact | interpretation |
+| `wiki/sources/` | narrative, quotes, context, wikilinks | canonical status or final machine-readable facts |
+| `data/companies/` + `data/sources/` | financials, claim status, positioning, thesis signals | long-form prose |
+| `data/thesis.yaml` | stage status, ticker map, catalyst dates | bulky evidence blobs |
+| `src/synthesis.py` + `src/report.py` | derived views | new facts |
+
+If the same fact appears in both wiki prose and structured data, `data/` wins. Wiki explains the thesis; `data/` remembers what is true.
+
 ## Data Refresh Cadence
 
 - **13F filings:** Quarterly (45 days after quarter end). Next: ~May 15, 2026

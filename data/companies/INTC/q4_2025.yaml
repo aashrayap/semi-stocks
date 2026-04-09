@@ -1,0 +1,117 @@
+ticker: INTC
+company: Intel Corporation
+quarter: Q4 2025
+period: "2025-12-27"
+earnings_date: "2026-01-22"
+
+financials:
+  q4:
+    revenue: 13_700_000_000
+    revenue_yoy: "-4%"
+    gross_margin_gaap: 0.361
+    gross_margin_non_gaap: 0.379
+    operating_margin_gaap: 0.042
+    operating_margin_non_gaap: 0.088
+    net_income_gaap: -333_000_000
+    net_income_non_gaap: 800_000_000
+    eps_gaap: -0.12
+    eps_non_gaap: 0.15
+    operating_cash_flow: 4_300_000_000
+
+  full_year:
+    revenue: 52_900_000_000
+    revenue_yoy: "flat"
+    gross_margin_gaap: 0.348
+    gross_margin_non_gaap: 0.367
+    eps_gaap: -0.06
+    eps_non_gaap: 0.42
+    operating_cash_flow: 9_700_000_000
+
+  balance_sheet:
+    cash_and_equivalents: 14_265_000_000
+    short_term_investments: 23_151_000_000
+    inventories: 11_618_000_000
+    total_assets: 211_429_000_000
+    total_current_assets: 63_688_000_000
+    short_term_debt: 2_499_000_000
+    long_term_debt: 44_086_000_000
+    total_stockholders_equity: 126_360_000_000
+
+  segments:
+    client_computing_revenue: 8_200_000_000
+    data_center_and_ai_revenue: 4_700_000_000
+    intel_foundry_revenue: 4_500_000_000
+    all_other_revenue: 600_000_000
+
+guidance:
+  q1_2026:
+    revenue: [11_700_000_000, 12_700_000_000]
+    gross_margin_gaap: 0.323
+    gross_margin_non_gaap: 0.345
+    eps_gaap: -0.21
+    eps_non_gaap: 0.00
+
+forward_claims:
+  - claim: "Q1 2026 revenue will be between $11.7B and $12.7B"
+    speaker: "Management guidance"
+    source: "Q4 2025 earnings release"
+    verify_at: "Q1 2026 earnings"
+    status: pending
+
+  - claim: "Q1 2026 non-GAAP EPS will be $0.00"
+    speaker: "Management guidance"
+    source: "Q4 2025 earnings release"
+    verify_at: "Q1 2026 earnings"
+    status: pending
+
+  - claim: "Available supply will be at its lowest level in Q1 before improving in Q2 and beyond"
+    speaker: "CFO David Zinsner"
+    source: "Q4 2025 earnings release"
+    verify_at: "Q2 2026 earnings"
+    status: pending
+
+  - claim: "Intel will grow supply to meet strong customer demand for its first products on Intel 18A"
+    speaker: "CEO Lip-Bu Tan"
+    source: "Q4 2025 earnings release"
+    verify_at: "2026 product ramp commentary"
+    status: pending
+
+thesis_signals:
+  - bottleneck: n3_logic
+    direction: confirms
+    evidence: >
+      Intel's first 18A products launched, but Q1 revenue guidance is only $11.7B-$12.7B and
+      management said available supply bottoms in Q1 before improving later. Alternative advanced
+      capacity still is not large enough to unwind the main wafer shortage.
+
+  - bottleneck: foundry
+    direction: confirms
+    evidence: >
+      Intel Foundry generated $4.5B of Q4 revenue and the first 18A products launched. That makes
+      Intel a real alternative-capacity datapoint, but still a ramp rather than an immediate relief valve.
+
+positioning:
+  baker:
+    ticker: INTC
+    value: 18_000_000
+    type: common
+    conviction: low
+    thesis: "Mostly out of the trade."
+    notes: "Position was down 81% QoQ in Q4 2025."
+
+  leopold:
+    ticker: INTC
+    value: 749_000_000
+    type: call
+    conviction: very_high
+    thesis: "Alternative leading-edge and foundry optionality."
+    notes: "One of Leopold's largest positions."
+
+  divergence: >
+    This is one of the strongest repo divergences. Leopold still owns a very large upside option
+    on Intel becoming credible advanced-node supply. Baker has mostly walked away.
+
+notes:
+  - "Official source was Intel's Q4/full-year 2025 earnings release dated 2026-01-22."
+  - "Quarter supports the repo view that Intel matters as optionality, not as immediate bottleneck relief."
+

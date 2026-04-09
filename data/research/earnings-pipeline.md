@@ -64,3 +64,26 @@ forward_claims:
 ```
 
 Next quarter, first step is: pull prior `forward_claims` with matching `verify_at` and score them. This builds a credibility track record per company over time.
+
+## Alignment / promotion gates
+
+The funnel is only useful if each layer has one job:
+
+```
+wiki/raw/      = evidence
+wiki/sources/  = synthesis for humans
+data/companies/= canonical structured facts
+data/thesis.yaml = thesis control plane
+report         = derived view
+```
+
+Enforce the handoffs:
+
+1. `wiki/raw/` artifacts are immutable after ingest.
+2. Every `wiki/sources/` page must resolve every path in frontmatter `sources:`.
+3. Deep-dive earnings pages must have a matching `data/companies/<TICKER>/...yaml`.
+4. Every company YAML must have a matching earnings source page in `wiki/sources/`.
+5. `data/thesis.yaml` changes only after structured evidence changes thesis state.
+6. `src/synthesis.py` and `src/report.py` render canonical state; they do not introduce new facts.
+
+Rule of thumb: prose can summarize structure, but structure is the final authority.

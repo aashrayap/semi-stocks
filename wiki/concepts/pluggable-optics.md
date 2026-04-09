@@ -3,7 +3,7 @@ title: Pluggable Optics (Scale-Out)
 tags: [optics, pluggable, networking, bottleneck]
 sources: [../data/thesis.yaml]
 created: 2026-04-07
-updated: 2026-04-07
+updated: 2026-04-08
 ---
 
 # Pluggable Optics (Scale-Out)
@@ -34,7 +34,7 @@ This is the ONLY bottleneck where all three sources agree. It's the highest-conv
 
 ## Relationship to CPO
 
-Pluggable optics is the current trade. [[concepts/co-packaged-optics]] is the next evolution (2028+). Copper handles inside-rack connections today; pluggable handles rack-to-rack. When distances and bandwidth exceed pluggable limits, CPO takes over.
+Pluggable optics is the current trade. [[concepts/co-packaged-optics]] is the next evolution (2028+). Copper handles inside-rack connections today; pluggable handles rack-to-rack. When distances and bandwidth exceed pluggable limits, CPO takes over. The names that benefit from copper staying inside the rack live in [[concepts/copper-signal-integrity]].
 
 Jensen at GTC26: copper scales to NVL144 (maybe 288). NVL1152 (Feynman) will be "all CPO." But pluggable and copper consumption still grows because there are 5 different rack types, all needing connectivity.
 
@@ -42,5 +42,7 @@ Jensen at GTC26: copper scales to NVL144 (maybe 288). NVL1152 (Feynman) will be 
 
 - **CRWV Q4 2025:** Every NVL72 rack deployed uses pluggable optics for scale-out. 100K+ GPUs deployed in Q4 = significant transceiver demand.
 - **NVDA Q4 FY2026:** Networking revenue $11B (+3.5x YoY). Grace Blackwell = ~2/3 of DC revenue, all rack-scale with optics. "We ship racks of computers."
+- **COHR Q2 FY2026:** Datacenter and communications demand drove 17.5% YoY revenue growth. Management kept ramping capital investment to expand optical capacity.
+- **LITE Q2 FY2026:** Revenue reached $665.5M, up 65.5% YoY, with Q3 guidance moving to $780M-$830M and OCS backlog already beyond $400M. Optical demand is turning directly into booked revenue.
 
-See also: [[concepts/bottleneck-cascade]], [[concepts/co-packaged-optics]], [[sources/semianalysis-signals]], [[sources/crwv-q4-2025]], [[sources/nvda-q4-fy2026]]
+See also: [[concepts/bottleneck-cascade]], [[concepts/co-packaged-optics]], [[concepts/copper-signal-integrity]], [[sources/semianalysis-signals]], [[sources/crwv-q4-2025]], [[sources/nvda-q4-fy2026]], [[sources/cohr-q2-fy2026]], [[sources/lite-q2-fy2026]]

@@ -3,7 +3,7 @@ title: Co-Packaged Optics (CPO)
 tags: [optics, cpo, networking, bottleneck, next]
 sources: [../data/thesis.yaml]
 created: 2026-04-07
-updated: 2026-04-07
+updated: 2026-04-08
 ---
 
 # Co-Packaged Optics (CPO)
@@ -29,7 +29,9 @@ As AI clusters scale to tens of thousands of GPUs, copper cables between racks c
 
 ## Key Nuance
 
-Volume CPO is a Feynman story (2028+), NOT Rubin Ultra. Inside every rack through NVL1152 remains copper. This means copper connector companies (ALAB, SMTC) have a longer runway than the CPO hype suggests.
+Volume CPO is a Feynman story (2028+), NOT Rubin Ultra. Inside every rack through NVL1152 remains copper. This means copper connector companies (ALAB, SMTC) have a longer runway than the CPO hype suggests; see [[concepts/copper-signal-integrity]].
+
+The newest concrete datapoint is Lumentum's Q2 FY2026 disclosure of an incremental multi-hundred-million-dollar CPO order deliverable in H1 2027. That is earlier than pure slideware, but it still fits the repo's "next cycle, not current revenue base" framing.
 
 ## Source Positioning
 
@@ -42,4 +44,4 @@ Volume CPO is a Feynman story (2028+), NOT Rubin Ultra. Inside every rack throug
 
 CPO winners will be whoever integrates optical engines on-package — COHR and LITE are best positioned but volume revenue is years away.
 
-See also: [[concepts/pluggable-optics]], [[concepts/bottleneck-cascade]]
+See also: [[concepts/pluggable-optics]], [[concepts/copper-signal-integrity]], [[concepts/bottleneck-cascade]], [[sources/lite-q2-fy2026]]

@@ -4,6 +4,48 @@ Append-only record of wiki activity. Each entry starts with `## [date] action | 
 
 ---
 
+## [2026-04-08] ingest | MU / INTC / TSM / LITE deep-dive catch-up
+
+Closed the remaining deep-dive alignment gaps by adding full raw/source/structured company coverage for MU Q2 FY2026, INTC Q4 2025, TSM Q4 2025, and LITE Q2 FY2026.
+
+Updated concept pages so the new company signals resolve into the existing thesis graph:
+- `concepts/memory-supercycle.md` now includes Micron's record quarter and sharp Q3 guide-up
+- `concepts/n3-wafer-crunch.md` now includes direct TSMC and Intel confirmation
+- `concepts/foundry.md` now anchors Intel optionality and TSMC scale in concrete numbers
+- `concepts/pluggable-optics.md` and `concepts/co-packaged-optics.md` now include Lumentum's current optical acceleration and early CPO booked-demand signal
+
+Updated the thesis control plane to the latest confirmed investor-relations dates:
+- TSM next earnings: 2026-04-16
+- INTC next earnings: 2026-04-23
+- LITE next earnings: 2026-05-05
+
+MU's next earnings date remains 2026-06-25 in the control plane pending an official Micron IR announcement.
+
+---
+
+## [2026-04-08] update | Alignment burn-down + raw/source restoration
+
+Restored the `wiki/raw/` layer after migration left the directory absent from the worktree. Added restored raw source bundles for CRWV Q4 2025 and NVDA Q4 FY2026 so existing wiki source pages once again resolve to a canonical upstream artifact.
+
+Added missing concept pages to match the control plane in `data/thesis.yaml`: `gpu-cloud`, `power`, `foundry`, `copper-signal-integrity`, and `euv-tools`. Updated linked concept/source pages so the graph reflects the same bottleneck vocabulary used by the ticker map.
+
+Updated `data/thesis.yaml` to move ASML's next earnings date from 2026-04-16 to 2026-04-15 based on the official ASML investor relations calendar.
+
+Alignment warnings reduced from 14 to 4. Remaining gaps are the still-missing deep-dive company YAMLs for MU, INTC, TSM, and LITE.
+
+---
+
+## [2026-04-08] ingest | Coherent Q2 FY2026 Earnings
+
+Third earnings pipeline run. Three-layer funnel:
+- **Raw:** `raw/cohr-q2-fy2026-earnings-release.md` (official Coherent earnings release, primary-source bundle)
+- **Source:** `sources/cohr-q2-fy2026.md` (synthesized: metrics, guidance, thesis signal, Baker/Leopold agreement)
+- **Structure:** `data/companies/COHR/q2_fy2026.yaml` (financials, guidance claims, thesis signal, positioning)
+
+Key thesis signals: datacenter and communications demand remained strong, margins expanded, and management kept ramping capacity to support optical demand. COHR remains the cleanest agreement zone across Leopold, Baker, and SemiAnalysis.
+
+---
+
 ## [2026-04-07] update | Report restructure + cycle risk integration
 
 Restructured report from 9 sections → 5 (3 main + summary + collapsed drift):

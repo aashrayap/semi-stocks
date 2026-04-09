@@ -1,0 +1,108 @@
+ticker: COHR
+company: Coherent Corp.
+quarter: Q2 FY2026
+period: "2025-12-31"
+earnings_date: "2026-02-04"
+
+financials:
+  q2:
+    revenue: 1_686_000_000
+    revenue_qoq: "+6.6%"
+    revenue_yoy: "+17.5%"
+    gross_margin_gaap: 0.369
+    gross_margin_non_gaap: 0.390
+    operating_income_gaap: 184_000_000
+    operating_margin_gaap: 0.109
+    operating_income_non_gaap: 336_000_000
+    operating_margin_non_gaap: 0.199
+    net_income_gaap: 147_000_000
+    net_income_non_gaap: 248_000_000
+    eps_gaap: 0.76
+    eps_non_gaap: 1.29
+
+  ytd:
+    revenue: 3_267_000_000
+    revenue_yoy: "+17.4%"
+    gross_margin_gaap: 0.368
+    gross_margin_non_gaap: 0.389
+    operating_income_gaap: 443_000_000
+    operating_margin_gaap: 0.136
+    operating_income_non_gaap: 645_000_000
+    operating_margin_non_gaap: 0.197
+    net_income_gaap: 373_000_000
+    net_income_non_gaap: 469_000_000
+    eps_gaap: 1.95
+    eps_non_gaap: 2.45
+
+guidance:
+  q3_fy2026:
+    revenue: [1_700_000_000, 1_840_000_000]
+    gross_margin_non_gaap: [0.385, 0.405]
+    operating_expenses_non_gaap: [320_000_000, 340_000_000]
+    tax_rate_non_gaap: [0.18, 0.20]
+    eps_non_gaap: [1.28, 1.48]
+    notes: "Outlook includes approximately $5M of revenue from the Munich tools business before the sale closed at the end of January 2026."
+
+forward_claims:
+  - claim: "Q3 FY2026 revenue will be between $1.70B and $1.84B"
+    speaker: "Management guidance"
+    source: "Q2 FY2026 earnings release"
+    verify_at: "Q3 FY2026 earnings"
+    status: pending
+
+  - claim: "Q3 FY2026 non-GAAP gross margin will be between 38.5% and 40.5%"
+    speaker: "Management guidance"
+    source: "Q2 FY2026 earnings release"
+    verify_at: "Q3 FY2026 earnings"
+    status: pending
+
+  - claim: "Q3 FY2026 non-GAAP EPS will be between $1.28 and $1.48"
+    speaker: "Management guidance"
+    source: "Q2 FY2026 earnings release"
+    verify_at: "Q3 FY2026 earnings"
+    status: pending
+
+  - claim: "Strong growth will continue in the second half of FY2026 and throughout FY2027"
+    speaker: "CEO Jim Anderson"
+    source: "Q2 FY2026 earnings release"
+    verify_at: "FY2026 second half and FY2027 quarterly results"
+    status: pending
+    notes: "Tied to datacenter and communications demand plus production-capacity expansion."
+
+  - claim: "Capital investment will continue ramping to drive capacity increases that support demand"
+    speaker: "CFO Sherri Luther"
+    source: "Q2 FY2026 earnings release"
+    verify_at: "FY2026 capital-spending commentary"
+    status: pending
+
+thesis_signals:
+  - bottleneck: pluggable_optics
+    direction: confirms
+    evidence: >
+      Datacenter and communications demand drove another strong quarter. Revenue grew 17.5% YoY,
+      non-GAAP gross margin expanded to 39.0%, and management kept ramping capital investment to
+      support optical capacity.
+
+positioning:
+  baker:
+    ticker: COHR
+    value: 394_000_000
+    type: common_plus_calls
+    conviction: high
+    thesis: "Optical bottleneck expression across pluggables now and CPO later."
+
+  leopold:
+    ticker: COHR
+    value: 89_000_000
+    type: common
+    conviction: medium
+    thesis: "Optical overlap inside the deployment-layer stack."
+
+  divergence: >
+    This is one of the rare agreement names rather than a true divergence. Baker is much more
+    concentrated, but both funds are long COHR and SemiAnalysis also flags the name in optical
+    and CPO discussions.
+
+notes:
+  - "Official source was the Coherent Q2 FY2026 earnings release dated 2026-02-04."
+  - "Quarter validates COHR as the cleanest consensus expression in the optical layer."
