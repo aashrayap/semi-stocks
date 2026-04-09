@@ -6,3 +6,7 @@
   lookahead_tickers: ASML, TSM
   report: agents/reports/earnings-alert-2026-04-08.md
 
+[2026-04-09T12:39:09] earnings_calendar
+  lookahead_tickers: ASML, TSM, EQT
+  report: agents/reports/earnings-alert-2026-04-09.md
+
